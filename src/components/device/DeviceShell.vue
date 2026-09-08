@@ -5,15 +5,31 @@ import DeviceTopbar from "./DeviceTopbar.vue";
 import DeviceSpeaker from "./DeviceSpeaker.vue";
 import DeviceSocials from "./DeviceSocials.vue";
 import DeviceVolume from "./DeviceVolume.vue";
+
+defineProps({
+  powered: {
+    type: Boolean,
+    default: false,
+  },
+  screenActive: {
+    type: Boolean,
+    default: false,
+  },
+});
+
+defineEmits(["toggle-power"]);
 </script>
 
 <template>
   <main class="viewer">
     <section class="device-shell device-panel" aria-label="Portfolio device">
       <div class="console">
-        <DeviceTopbar />
+        <DeviceTopbar
+          :powered="powered"
+          @toggle-power="$emit('toggle-power')"
+        />
 
-        <DeviceScreen>
+        <DeviceScreen :powered="screenActive">
           <slot></slot>
         </DeviceScreen>
 

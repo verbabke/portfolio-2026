@@ -75,6 +75,24 @@ body {
   box-shadow: var(--panel-inset);
 }
 
+.device-button {
+  cursor: pointer;
+  transition:
+    filter 120ms ease,
+    transform 80ms linear;
+}
+
+.device-button:hover {
+  filter: brightness(1.1);
+}
+
+.device-button:active {
+  box-shadow:
+    inset 2px 2px 3px #00000080,
+    inset -1px -1px #ffffff1a;
+  transform: translate(1px, 1px);
+}
+
 .led {
   display: inline-block;
   width: 10px;
@@ -90,4 +108,14 @@ body {
 .led-green {
   background: #38e89a;
   box-shadow: inset #0003 0 -1px 3px 0.5px, inset #07512e 0 -1px 4px, #36d69b 0 1px 7px, 0.5px 0.5px 1px #fff, -0.5px -0.5px 0.5px #151613;
+}
+
+.led-red {
+  background: #ff4c4c;
+  box-shadow: inset #0003 0 -1px 3px 0.5px, inset #6c0000 0 -1px 4px, #ff6b6b 0 1px 7px, 0.5px 0.5px 1px #fff, -0.5px -0.5px 0.5px #151613;
+}
+
+.led-yellow {
+  background: #ffeb3b;
+  box-shadow: inset #0003 0 -1px 3px 0.5px, inset #6c6000 0 -1px 4px, #fff176 0 1px 7px, 0.5px 0.5px 1px #fff, -0.5px -0.5px 0.5px #151613;
 }

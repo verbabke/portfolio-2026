@@ -86,7 +86,7 @@ function endVolumeAdjust(event) {
 
 .volume-wheel:active {
   cursor: grabbing;
-  filter: brightness(1.12);
+  filter: brightness(1.1);
 }
 
 .side-volume-marker {

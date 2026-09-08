@@ -27,7 +27,7 @@ const socialLinks = [
       <a
         v-for="socialLink in socialLinks"
         :key="socialLink.label"
-        class="social-button"
+        class="device-button social-button"
         :class="`social-button-${socialLink.brand}`"
         :href="socialLink.href"
         :aria-label="socialLink.label"
@@ -84,9 +84,6 @@ const socialLinks = [
     inset -2px -2px #2b2c2c,
     1px 2px 3px #00000080;
   color: #f5f4ed;
-  transition:
-    filter 120ms ease,
-    transform 80ms linear;
 }
 
 .social-button svg {
@@ -105,17 +102,6 @@ const socialLinks = [
 
 .social-button-mail {
   background: linear-gradient(145deg, #d56c4d, #863422);
-}
-
-.social-button:hover {
-  filter: brightness(1.1);
-}
-
-.social-button:active {
-  box-shadow:
-    inset 2px 2px 3px #00000080,
-    inset -1px -1px #ffffff1a;
-  transform: translate(1px, 1px);
 }
 
 @media (max-width: 1000px) {

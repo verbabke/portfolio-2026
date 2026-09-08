@@ -1,6 +1,15 @@
+<script setup>
+defineProps({
+  powered: {
+    type: Boolean,
+    default: false,
+  },
+});
+</script>
+
 <template>
   <div class="screen-bezel">
-    <div class="screen">
+    <div class="screen" :class="{ 'screen-off': !powered }">
       <slot></slot>
     </div>
   </div>
@@ -27,8 +36,12 @@
   border-radius: var(--bezel-radius);
   background: var(--metal-gradient);
   box-shadow: var(--metal-inset);
-  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
 }
@@ -44,6 +57,15 @@
   border-radius: var(--screen-radius);
   clip-path: inset(0 round var(--screen-radius));
   background: var(--screen-color);
+}
+
+.screen-off {
+  background: #101312;
+}
+
+.screen-off::before,
+.screen-off::after {
+  display: none;
 }
 
 .screen::before {

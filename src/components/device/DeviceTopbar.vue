@@ -1,16 +1,35 @@
 <script setup>
 import DeviceSocials from "./DeviceSocials.vue";
 import DeviceSpeaker from "./DeviceSpeaker.vue";
+
+defineProps({
+  powered: {
+    type: Boolean,
+    default: false,
+  },
+});
+
+defineEmits(["toggle-power"]);
 </script>
 
 <template>
   <div class="device-topbar flex flex-1 justify-between gap-2">
     <div class="device-controls">
       <div class="battery-indicator" role="img" aria-label="Battery indicator">
-        <span class="led led-green" aria-hidden="true"></span>
+        <span
+          class="led"
+          :class="powered ? 'led-green' : 'led-off'"
+          aria-hidden="true"
+        ></span>
         <p class="emboss-txt select-none">Bat</p>
       </div>
-      <button class="power-button" type="button" aria-label="Power">
+      <button
+        class="device-button power-button"
+        type="button"
+        aria-label="Power"
+        :aria-pressed="powered"
+        @click="$emit('toggle-power')"
+      >
         <span aria-hidden="true"></span>
       </button>
     </div>
@@ -42,7 +61,6 @@ import DeviceSpeaker from "./DeviceSpeaker.vue";
   position: relative;
   width: var(--round-control-size);
   aspect-ratio: 1;
-  cursor: pointer;
   border: 1px solid #161817;
   border-radius: 50%;
   background: linear-gradient(145deg, #818181, #1c1e1d);
@@ -75,9 +93,9 @@ import DeviceSpeaker from "./DeviceSpeaker.vue";
   box-shadow: 1px 1px #111312;
 }
 
-.power-button:active {
-  background: linear-gradient(145deg, #1c1e1d, #818181);
-  transform: translate(1px, 1px);
+.led-off {
+  background: #25302b;
+  box-shadow: inset 0 1px 2px #00000080;
 }
 
 .screen-top-vents {
