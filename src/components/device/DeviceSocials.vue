@@ -2,7 +2,7 @@
 const socialLinks = [
   {
     label: "GitHub",
-    href: "https://github.com/bjornverbakel",
+    href: "https://github.com/verbabke",
     brand: "github",
   },
   {

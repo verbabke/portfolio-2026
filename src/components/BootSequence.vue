@@ -81,11 +81,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <Transition
-    name="fade-overlay"
-    enter-active-class="opacity-1 transition-opacity duration-200"
-    leave-active-class="opacity-0 transition-opacity duration-200"
-  >
+  <Transition name="fade-overlay">
     <div v-show="isVisible" class="boot-overlay">
       <div class="boot-sequence">
         <p class="boot-blink">INITIALIZING...</p>
@@ -109,6 +105,21 @@ onBeforeUnmount(() => {
   color: #9df0b9;
   font-family: "Share Tech Mono", monospace;
   text-shadow: 0 0 8px #38e89a;
+}
+
+.fade-overlay-enter-active,
+.fade-overlay-leave-active {
+  transition: opacity 200ms ease;
+}
+
+.fade-overlay-enter-from,
+.fade-overlay-leave-to {
+  opacity: 0;
+}
+
+.fade-overlay-enter-to,
+.fade-overlay-leave-from {
+  opacity: 1;
 }
 
 .boot-sequence {

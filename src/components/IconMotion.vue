@@ -84,6 +84,14 @@ useLoop().onBeforeRender(({ delta, elapsed }) => {
   );
   icon.value.rotation.y = spin;
 });
+
+function getObject3D() {
+  return icon.value;
+}
+
+defineExpose({
+  getObject3D,
+});
 </script>
 
 <template>
