@@ -9,6 +9,18 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  interactive: {
+    type: Boolean,
+    default: true,
+  },
+  opacity: {
+    type: Number,
+    default: 1,
+  },
+  opacityDamping: {
+    type: Number,
+    default: 4.5,
+  },
   path: {
     type: String,
     required: true,
@@ -40,7 +52,7 @@ const boundsBox = new Box3();
 const boundsSize = new Vector3();
 const boundsCenter = new Vector3();
 
-const emit = defineEmits(["hover-change"]);
+const emit = defineEmits(["hover-change", "select"]);
 
 function getObject3D() {
   return icon.value?.getObject3D?.() ?? null;
@@ -80,6 +92,8 @@ defineExpose({
   <IconMotion
     ref="icon"
     :hovered="hovered"
+    :opacity="opacity"
+    :opacity-damping="opacityDamping"
     :position="position"
     :float-delay="floatDelay"
   >
@@ -92,9 +106,11 @@ defineExpose({
   </IconMotion>
 
   <TresMesh
+    v-if="interactive"
     :position="[position[0], position[1] + 0.25, hitDepth]"
     @pointerenter="emit('hover-change', true)"
     @pointerleave="emit('hover-change', false)"
+    @click="emit('select')"
   >
     <TresPlaneGeometry :args="hitArea" />
     <TresMeshBasicMaterial transparent :opacity="0" :depth-write="false" />

@@ -1,3 +1,7 @@
+<script setup>
+defineEmits(["direction"]);
+</script>
+
 <template>
   <section class="button-panel sticker-txt" aria-label="Console controls">
     <div class="d-pad">
@@ -9,6 +13,7 @@
           :class="`d-pad-${direction}`"
           type="button"
           :aria-label="direction"
+          @click="$emit('direction', direction)"
         ></button>
         <button
           class="d-pad-center"

@@ -15,14 +15,8 @@ const socialLinks = [
 </script>
 
 <template>
-  <section
-    class="social-panel flex min-w-0 justify-end"
-    aria-label="Social links"
-  >
-    <nav
-      class="social-links flex flex-col items-center gap-1.5"
-      aria-label="Social media"
-    >
+  <section class="social-panel" aria-label="Social links">
+    <nav class="social-links" aria-label="Social media">
       <p class="emboss-txt select-none">LINK</p>
       <a
         v-for="socialLink in socialLinks"
@@ -62,7 +56,25 @@ const socialLinks = [
   </section>
 </template>
 
-<style>
+<style scoped>
+.social-panel {
+  display: flex;
+  min-width: 0;
+  justify-content: flex-end;
+}
+
+.social-links {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+}
+
+.social-links .emboss-txt {
+  margin: 0;
+}
+
 .top-social-panel {
   display: none;
 }
@@ -119,6 +131,7 @@ const socialLinks = [
 
   .top-social-panel .social-links {
     flex-direction: row;
+    align-items: center;
     gap: 5px;
   }
 }
@@ -136,6 +149,7 @@ const socialLinks = [
 
   .lower-social-panel .social-links {
     flex-direction: row;
+    align-items: center;
   }
 
   .top-social-panel .emboss-txt {

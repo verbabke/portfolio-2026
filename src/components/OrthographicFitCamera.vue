@@ -9,7 +9,7 @@ import {
   watch,
 } from "vue";
 import { extend, useTresContext } from "@tresjs/core";
-import { OrthographicCamera } from "three";
+import { MathUtils, OrthographicCamera } from "three";
 
 extend({
   OrthographicCamera,
@@ -28,14 +28,27 @@ const props = defineProps({
     type: Function,
     required: true,
   },
+  // if set skip auto-fit math entirely and just use this fixed frame
+  focusOverride: {
+    type: Object,
+    default: null,
+  },
 });
 
 const { sizes } = useTresContext();
+const emit = defineEmits(["aspect-change"]);
 const orthographicCamera = ref(null);
 const near = 0.1;
 const far = 100;
 const zoom = 1;
-const z = 30;
+const cameraDistance = 30;
+
+// padding multiplier eases from maxPaddingMultiplier down to minPaddingMultiplier as the
+// rendered width shrinks from paddingWidthMax down to paddingWidthMin (narrow screens need less slack)
+const maxPaddingMultiplier = 1.35;
+const minPaddingMultiplier = 1.15;
+const paddingWidthMax = 1400;
+const paddingWidthMin = 640;
 
 const cameraSettings = reactive({
   x: 0,
@@ -46,6 +59,16 @@ const cameraSettings = reactive({
 let fitFrame = 0;
 
 const aspect = computed(() => sizes.aspectRatio.value || 1);
+
+const paddingMultiplier = computed(() => {
+  const widthRange = paddingWidthMax - paddingWidthMin;
+  const t = MathUtils.clamp(
+    (sizes.width.value - paddingWidthMin) / widthRange,
+    0,
+    1,
+  );
+  return MathUtils.lerp(minPaddingMultiplier, maxPaddingMultiplier, t);
+});
 
 const cameraBounds = computed(() => {
   const top = cameraSettings.viewHeight / 2;
@@ -73,12 +96,19 @@ function applyCameraSettings() {
   camera.near = near;
   camera.far = far;
   camera.zoom = zoom;
-  camera.position.set(cameraSettings.x, cameraSettings.y, z);
+  camera.position.set(cameraSettings.x, cameraSettings.y, cameraDistance);
   camera.lookAt(cameraSettings.x, cameraSettings.y, 0);
   camera.updateProjectionMatrix();
 }
 
 function fitScene() {
+  if (props.focusOverride) {
+    cameraSettings.viewHeight = props.focusOverride.viewHeight;
+    cameraSettings.x = props.focusOverride.x;
+    cameraSettings.y = props.focusOverride.y;
+    return;
+  }
+
   const sceneObjects = props.getSceneObjects();
 
   if (!sceneObjects.length) {
@@ -110,7 +140,10 @@ function fitScene() {
   const width = maxX - minX;
   const height = maxY - minY;
   const horizontalHeight = width / Math.max(aspect.value, 0.001);
-  const paddedHeight = Math.max(height + 2, horizontalHeight + 1.5) * 1.12;
+
+  // padding around the scene, a bit tighter on narrower screens
+  const paddedHeight =
+    Math.max(height + 2, horizontalHeight + 1.5) * paddingMultiplier.value;
 
   cameraSettings.viewHeight = Math.max(paddedHeight, 6);
   cameraSettings.x = minX + width / 2;
@@ -126,6 +159,9 @@ function scheduleSceneFit() {
 }
 
 watch(sizes.aspectRatio, scheduleSceneFit);
+watch(sizes.width, scheduleSceneFit);
+watch(aspect, (value) => emit("aspect-change", value), { immediate: true });
+watch(() => props.focusOverride, scheduleSceneFit, { deep: true });
 
 watch(
   () => [props.visible, props.ready],

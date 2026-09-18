@@ -76,7 +76,7 @@ defineEmits(["toggle-power"]);
   left: 27%;
   width: 46%;
   height: 46%;
-  border: 2px solid #c8c4ba;
+  border: 3px solid #c8c4ba;
   border-top-color: transparent;
   border-radius: 50%;
 }
@@ -90,7 +90,6 @@ defineEmits(["toggle-power"]);
   height: 68%;
   border-radius: 2px;
   background: #c8c4ba;
-  box-shadow: 1px 1px #111312;
 }
 
 .led-off {
