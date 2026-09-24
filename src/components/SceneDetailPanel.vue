@@ -17,9 +17,7 @@ const texture = shallowRef(null);
 const panelPosition = computed(() =>
   props.compact ? [0, -3.35, -0.6] : [4.7, 0.15, -0.6],
 );
-const panelSize = computed(() =>
-  props.compact ? [10.6, 6.2] : [10.4, 7.4],
-);
+const panelSize = computed(() => (props.compact ? [10.6, 6.2] : [10.4, 7.4]));
 
 let canvas;
 let context;

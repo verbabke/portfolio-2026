@@ -17,7 +17,7 @@ defineProps({
   },
 });
 
-defineEmits(["toggle-power", "direction"]);
+defineEmits(["toggle-power", "direction", "confirm", "back"]);
 </script>
 
 <template>
@@ -34,7 +34,11 @@ defineEmits(["toggle-power", "direction"]);
         </DeviceScreen>
 
         <DeviceSpeaker />
-        <DeviceControls @direction="$emit('direction', $event)" />
+        <DeviceControls
+          @direction="$emit('direction', $event)"
+          @confirm="$emit('confirm')"
+          @back="$emit('back')"
+        />
         <DeviceSocials class="lower-social-panel" />
       </div>
 

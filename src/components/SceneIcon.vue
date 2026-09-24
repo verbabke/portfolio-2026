@@ -9,6 +9,14 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  focused: {
+    type: Boolean,
+    default: false,
+  },
+  focusFrameOffset: {
+    type: Array,
+    default: () => [0, 0.25, 1.1],
+  },
   interactive: {
     type: Boolean,
     default: true,
@@ -39,11 +47,15 @@ const props = defineProps({
   },
   hitArea: {
     type: Array,
-    default: () => [6.2, 7],
+    default: () => [6.2, 8],
   },
   hitDepth: {
     type: Number,
     default: 2,
+  },
+  hitOffsetY: {
+    type: Number,
+    default: 0,
   },
 });
 
@@ -90,6 +102,56 @@ defineExpose({
 
 <template>
   <IconMotion
+    :hovered="hovered"
+    :rotate="false"
+    :position="position"
+    :float-delay="floatDelay"
+  >
+    <!-- Kept mounted (not v-if) so its float/lift state doesn't reset when focus switches icons. -->
+    <TresGroup :visible="focused" :position="focusFrameOffset">
+      <!-- Top-left corner -->
+      <TresMesh :position="[-2.65, 3.2, 0]">
+        <TresPlaneGeometry :args="[1.2, 0.16]" />
+        <TresMeshBasicMaterial color="#0b2b24" />
+      </TresMesh>
+      <TresMesh :position="[-3.17, 2.68, 0]">
+        <TresPlaneGeometry :args="[0.16, 1.2]" />
+        <TresMeshBasicMaterial color="#0b2b24" />
+      </TresMesh>
+
+      <!-- Top-right corner -->
+      <TresMesh :position="[2.65, 3.2, 0]">
+        <TresPlaneGeometry :args="[1.2, 0.16]" />
+        <TresMeshBasicMaterial color="#0b2b24" />
+      </TresMesh>
+      <TresMesh :position="[3.17, 2.68, 0]">
+        <TresPlaneGeometry :args="[0.16, 1.2]" />
+        <TresMeshBasicMaterial color="#0b2b24" />
+      </TresMesh>
+
+      <!-- Bottom-left corner -->
+      <TresMesh :position="[-2.65, -2.7, 0]">
+        <TresPlaneGeometry :args="[1.2, 0.16]" />
+        <TresMeshBasicMaterial color="#0b2b24" />
+      </TresMesh>
+      <TresMesh :position="[-3.17, -2.18, 0]">
+        <TresPlaneGeometry :args="[0.16, 1.2]" />
+        <TresMeshBasicMaterial color="#0b2b24" />
+      </TresMesh>
+
+      <!-- Bottom-right corner -->
+      <TresMesh :position="[2.65, -2.7, 0]">
+        <TresPlaneGeometry :args="[1.2, 0.16]" />
+        <TresMeshBasicMaterial color="#0b2b24" />
+      </TresMesh>
+      <TresMesh :position="[3.17, -2.18, 0]">
+        <TresPlaneGeometry :args="[0.16, 1.2]" />
+        <TresMeshBasicMaterial color="#0b2b24" />
+      </TresMesh>
+    </TresGroup>
+  </IconMotion>
+
+  <IconMotion
     ref="icon"
     :hovered="hovered"
     :opacity="opacity"
@@ -105,9 +167,10 @@ defineExpose({
     />
   </IconMotion>
 
+  <!-- Invisible click/hover target sized independently from the model mesh. -->
   <TresMesh
     v-if="interactive"
-    :position="[position[0], position[1] + 0.25, hitDepth]"
+    :position="[position[0], position[1] + hitOffsetY, hitDepth]"
     @pointerenter="emit('hover-change', true)"
     @pointerleave="emit('hover-change', false)"
     @click="emit('select')"

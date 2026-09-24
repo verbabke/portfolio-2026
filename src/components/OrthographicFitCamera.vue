@@ -36,7 +36,7 @@ const props = defineProps({
 });
 
 const { sizes } = useTresContext();
-const emit = defineEmits(["aspect-change"]);
+const emit = defineEmits(["aspect-change", "frame-change"]);
 const orthographicCamera = ref(null);
 const near = 0.1;
 const far = 100;
@@ -99,6 +99,11 @@ function applyCameraSettings() {
   camera.position.set(cameraSettings.x, cameraSettings.y, cameraDistance);
   camera.lookAt(cameraSettings.x, cameraSettings.y, 0);
   camera.updateProjectionMatrix();
+
+  emit("frame-change", {
+    left: cameraSettings.x + cameraBounds.value.left,
+    right: cameraSettings.x + cameraBounds.value.right,
+  });
 }
 
 function fitScene() {

@@ -24,7 +24,7 @@ defineEmits(["toggle-power"]);
         <p class="emboss-txt select-none">Bat</p>
       </div>
       <button
-        class="device-button power-button"
+        class="device-button power-button nes-cursor-pointer"
         type="button"
         aria-label="Power"
         :aria-pressed="powered"

@@ -8,6 +8,10 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  rotate: {
+    type: Boolean,
+    default: true,
+  },
   opacity: {
     type: Number,
     default: 1,
@@ -61,7 +65,9 @@ function ensureUniqueMaterials(object) {
     }
 
     if (Array.isArray(child.material)) {
-      child.material = child.material.map((material) => material?.clone?.() ?? material);
+      child.material = child.material.map(
+        (material) => material?.clone?.() ?? material,
+      );
       return;
     }
 
@@ -176,7 +182,13 @@ useLoop().onBeforeRender(({ delta, elapsed }) => {
       lift * 0.32,
     smoothZ,
   );
-  icon.value.rotation.y = spin;
+
+  if (props.rotate) {
+    icon.value.rotation.y = spin;
+  } else {
+    icon.value.rotation.y = 0;
+  }
+
   applyOpacity(icon.value, smoothOpacity);
 });
 

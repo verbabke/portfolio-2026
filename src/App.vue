@@ -39,6 +39,14 @@ function handleDirection(direction) {
     portfolioScene.value?.selectNext();
   }
 }
+
+function handleConfirm() {
+  portfolioScene.value?.activateFocusedIcon?.();
+}
+
+function handleBack() {
+  portfolioScene.value?.closeDetail();
+}
 </script>
 
 <template>
@@ -47,6 +55,8 @@ function handleDirection(direction) {
     :screen-active="isSceneVisible"
     @toggle-power="togglePower"
     @direction="handleDirection"
+    @confirm="handleConfirm"
+    @back="handleBack"
   >
     <BootSequence
       v-if="!hasBootCompleted"

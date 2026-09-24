@@ -1,5 +1,5 @@
 <script setup>
-defineEmits(["direction"]);
+defineEmits(["direction", "confirm", "back"]);
 </script>
 
 <template>
@@ -19,17 +19,24 @@ defineEmits(["direction"]);
           class="d-pad-center"
           type="button"
           aria-label="Confirm"
+          @click="$emit('confirm')"
         ></button>
       </div>
     </div>
     <div class="console-buttons">
       <button
-        v-for="label in ['Select', 'Start']"
-        :key="label"
         class="console-button select-none"
         type="button"
+        @click="$emit('confirm')"
       >
-        {{ label }}
+        Select
+      </button>
+      <button
+        class="console-button select-none"
+        type="button"
+        @click="$emit('back')"
+      >
+        Return
       </button>
     </div>
   </section>
@@ -86,10 +93,13 @@ defineEmits(["direction"]);
     background 80ms linear;
 }
 .d-pad-direction {
+  cursor:
+    url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAzElEQVRYR+2X0Q6AIAhF5f8/2jYXZkwEjNSVvVUjDpcrGgT7FUkI2D9xRfQETwNIiWO85wfINfQUEyxBG2ArsLwC0jioGt5zFcwF4OYDPi/mBYKm4t0U8ATgRm3ThFoAqkhNgWkA0jJLvaOVSs7j3qMnSgXWBMiWPXe94QqMBMBc1VZIvaTu5u5pQewq0EqNZvIEMCmxAawK0DNkay9QmfFNAJUXfgGgUkLaE7j/h8fnASkxHTz0DGIBMCnBeeM7AArpUd3mz2x3C7wADglA8BcWMZhZAAAAAElFTkSuQmCC)
+      14 0,
+    pointer;
   position: absolute;
   z-index: 1;
   inset: 0;
-  cursor: pointer;
   border: 0;
   background: transparent;
 }
@@ -158,7 +168,10 @@ defineEmits(["direction"]);
 }
 .d-pad-center,
 .console-button {
-  cursor: pointer;
+  cursor:
+    url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAzElEQVRYR+2X0Q6AIAhF5f8/2jYXZkwEjNSVvVUjDpcrGgT7FUkI2D9xRfQETwNIiWO85wfINfQUEyxBG2ArsLwC0jioGt5zFcwF4OYDPi/mBYKm4t0U8ATgRm3ThFoAqkhNgWkA0jJLvaOVSs7j3qMnSgXWBMiWPXe94QqMBMBc1VZIvaTu5u5pQewq0EqNZvIEMCmxAawK0DNkay9QmfFNAJUXfgGgUkLaE7j/h8fnASkxHTz0DGIBMCnBeeM7AArpUd3mz2x3C7wADglA8BcWMZhZAAAAAElFTkSuQmCC)
+      14 0,
+    pointer;
   border: 1px solid #080909;
   background: var(--control-surface);
   box-shadow:
@@ -182,6 +195,10 @@ defineEmits(["direction"]);
     inset 2px 2px 3px #00000080,
     inset -1px -1px #ffffff1a;
   transform: translate(1px, 1px);
+}
+.d-pad-center:focus,
+.console-button:focus {
+  outline: none;
 }
 .console-buttons {
   display: flex;
