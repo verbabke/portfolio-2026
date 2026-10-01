@@ -5,6 +5,7 @@
 
 
 :root {
+  --text-color: #3c775e;
   --page-background: #16191a;
   --page-glow: #3f4443;
   --round-control-size: clamp(28px, 3.4vw, 38px);
@@ -19,7 +20,7 @@
   --case-edge: #716f68;
   --bezel-dark: #151918;
   --bezel-edge: #5d5d56;
-  --screen-color: #a9ebd4;
+  --screen-color: #c7e4db;
   --screen-shadow: #0b4437;
   --light-angle: 135deg;
   --light-highlight: #ffffff52;
@@ -42,6 +43,7 @@
   background: var(--page-background);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
+  --filter-color: invert(39%) sepia(26%) saturate(592%) hue-rotate(103deg) brightness(98%) contrast(97%);
 }
 
 * {
@@ -51,6 +53,14 @@
 body {
   margin: 0;
   min-width: 320px;
+}
+
+.render-pixelated {
+  image-rendering: pixelated;
+}
+
+.filter-to-textcolor {
+  filter: var(--filter-color);
 }
 
 .emboss-txt {
@@ -71,6 +81,20 @@ body {
 
 .nes-cursor-pointer {
   cursor: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAzElEQVRYR+2X0Q6AIAhF5f8/2jYXZkwEjNSVvVUjDpcrGgT7FUkI2D9xRfQETwNIiWO85wfINfQUEyxBG2ArsLwC0jioGt5zFcwF4OYDPi/mBYKm4t0U8ATgRm3ThFoAqkhNgWkA0jJLvaOVSs7j3qMnSgXWBMiWPXe94QqMBMBc1VZIvaTu5u5pQewq0EqNZvIEMCmxAawK0DNkay9QmfFNAJUXfgGgUkLaE7j/h8fnASkxHTz0DGIBMCnBeeM7AArpUd3mz2x3C7wADglA8BcWMZhZAAAAAElFTkSuQmCC) 14 0, pointer !important;
+}
+
+.nes-btn-compact {
+  padding: 4px 8px;
+  font-size: 10px;
+}
+
+.nes-progress.is-primary::-moz-progress-bar {
+  background-color: black;
+}
+
+.nes-progress {
+  background-color: transparent;
+  filter: var(--filter-color);
 }
 
 .device-subpanel {

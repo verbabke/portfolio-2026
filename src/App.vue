@@ -32,11 +32,17 @@ function handleBootComplete() {
   isSceneVisible.value = true;
 }
 
+function handleBootReveal() {
+  isSceneVisible.value = true;
+}
+
 function handleDirection(direction) {
   if (direction === "left") {
     portfolioScene.value?.selectPrevious();
   } else if (direction === "right") {
     portfolioScene.value?.selectNext();
+  } else if (direction === "top" || direction === "bottom") {
+    portfolioScene.value?.handleVerticalDirection(direction);
   }
 }
 
@@ -63,6 +69,7 @@ function handleBack() {
       :powered="isPowered"
       :has-finish-loading="hasFinishLoading"
       :progress="progress"
+      @reveal="handleBootReveal"
       @complete="handleBootComplete"
     />
 

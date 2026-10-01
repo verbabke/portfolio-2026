@@ -51,7 +51,7 @@ defineProps({
   z-index: 1;
   width: 100%;
   min-width: 0;
-  aspect-ratio: 2.48 / 1;
+  aspect-ratio: 2.2 / 1;
   overflow: hidden;
   isolation: isolate;
   border-radius: var(--screen-radius);

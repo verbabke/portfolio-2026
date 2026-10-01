@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref } from "vue";
+import { computed, ref, watch } from "vue";
 import { TresCanvas, extend } from "@tresjs/core";
 import {
   BrightnessContrastPmndrs,
@@ -19,6 +19,7 @@ import OrthographicFitCamera from "./OrthographicFitCamera.vue";
 import SceneIcon from "./SceneIcon.vue";
 import IconLabelLayer from "./IconLabelLayer.vue";
 import CarouselControls from "./CarouselControls.vue";
+import ProjectSelectionPanel from "./ProjectSelectionPanel.vue";
 import { iconDefinitions } from "../data/portfolioIcons";
 import { useSceneNavigation } from "../composables/useSceneNavigation";
 import { useIconLayout } from "../composables/useIconLayout";
@@ -98,11 +99,44 @@ function getSceneObjects() {
   return icons.value.map((icon) => iconRefs.get(icon.id)).filter(Boolean);
 }
 
+// dismissed icons/labels fade out over 180ms; hold position/reveal changes
+// until that fade-out has finished so labels never shift while still visible
+const detailFadeOutMs = 200;
+const isPositionSettled = ref(true);
+let settleTimer = null;
+
+watch(isDetailOpen, () => {
+  clearTimeout(settleTimer);
+  isPositionSettled.value = false;
+  settleTimer = setTimeout(() => {
+    isPositionSettled.value = true;
+  }, detailFadeOutMs);
+});
+
+const isRevealingDetail = computed(
+  () => isDetailOpen.value && isPositionSettled.value,
+);
+
+const projectPanel = ref(null);
+
+function handleVerticalDirection(direction) {
+  if (openedIconId.value !== "folder" || !projectPanel.value) {
+    return;
+  }
+
+  if (direction === "top") {
+    projectPanel.value.focusPrevious();
+  } else if (direction === "bottom") {
+    projectPanel.value.focusNext();
+  }
+}
+
 defineExpose({
   activateFocusedIcon,
   closeDetail,
   selectPrevious,
   selectNext,
+  handleVerticalDirection,
 });
 </script>
 
@@ -119,7 +153,7 @@ defineExpose({
     @pointerup="handleDragEnd"
     @pointercancel="handleDragCancel"
   >
-    <TresCanvas clear-color="#a9ebd4" :fps-limit="30">
+    <TresCanvas clear-color="#c7e4db" :fps-limit="30">
       <OrthographicFitCamera
         :visible="visible"
         :ready="ready"
@@ -169,6 +203,9 @@ defineExpose({
     <IconLabelLayer
       :icons="icons"
       :is-detail-open="isDetailOpen"
+      :opened-icon-id="openedIconId"
+      :is-revealing-detail="isRevealingDetail"
+      :is-position-settled="isPositionSettled"
       :is-compact="isCompact"
       :is-icon-focused="isIconFocused"
       :get-label-style="getLabelStyle"
@@ -182,6 +219,21 @@ defineExpose({
       @previous="selectPrevious"
       @next="selectNext"
     />
+
+    <ProjectSelectionPanel
+      ref="projectPanel"
+      :visible="isRevealingDetail && openedIconId === 'folder'"
+    />
+
+    <button
+      v-if="isDetailOpen"
+      type="button"
+      class="return-btn nes-btn nes-btn-compact nes-cursor-pointer"
+      aria-label="Return"
+      @click="closeDetail"
+    >
+      Return
+    </button>
   </div>
 </template>
 
@@ -206,5 +258,13 @@ defineExpose({
 
 .scene-dragging {
   cursor: grabbing;
+}
+
+.return-btn {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  z-index: 2;
+  text-transform: uppercase;
 }
 </style>

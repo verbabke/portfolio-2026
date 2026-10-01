@@ -16,9 +16,9 @@ const props = defineProps({
   },
 });
 
-const minBootTime = 1200;
+const minBootTime = 2000;
 
-const emit = defineEmits(["complete"]);
+const emit = defineEmits(["complete", "reveal"]);
 
 const isBooting = ref(false);
 const timedProgress = ref(0);
@@ -28,10 +28,9 @@ const displayedProgress = computed(() =>
 const isVisible = computed(
   () => props.powered && (isBooting.value || !props.hasFinishLoading),
 );
-let bootTimer;
 let progressTimer;
 
-function advanceProgress(startTime) {
+function updateBootProgress(startTime) {
   const elapsed = window.performance.now() - startTime;
   const progressTarget = Math.min((elapsed / minBootTime) * 100, 100);
   const delayedTarget = Math.max(0, progressTarget - Math.random() * 9);
@@ -42,53 +41,65 @@ function advanceProgress(startTime) {
 
   if (elapsed >= minBootTime) {
     timedProgress.value = 100;
+    isBooting.value = false;
     return;
   }
 
   progressTimer = window.setTimeout(
-    () => advanceProgress(startTime),
-    80 + Math.random() * 180,
+    () => updateBootProgress(startTime),
+    Math.min(80 + Math.random() * 180, minBootTime - elapsed),
   );
 }
 
 watch(
   () => props.powered,
   (powered) => {
-    window.clearTimeout(bootTimer);
     window.clearTimeout(progressTimer);
     isBooting.value = powered;
     timedProgress.value = 0;
 
     if (powered) {
-      advanceProgress(window.performance.now());
-      bootTimer = window.setTimeout(() => {
-        isBooting.value = false;
-      }, minBootTime);
+      updateBootProgress(window.performance.now());
     }
   },
 );
 
-watch(isVisible, (visible) => {
-  if (!visible && props.powered) {
+function handleFadeOutComplete() {
+  if (props.powered) {
     emit("complete");
   }
-});
+}
+
+function handleFadeOutStart() {
+  if (props.powered) {
+    emit("reveal");
+  }
+}
 
 onBeforeUnmount(() => {
-  window.clearTimeout(bootTimer);
   window.clearTimeout(progressTimer);
 });
 </script>
 
 <template>
-  <Transition name="fade-overlay">
+  <Transition
+    name="fade-overlay"
+    @before-leave="handleFadeOutStart"
+    @after-leave="handleFadeOutComplete"
+  >
     <div v-show="isVisible" class="boot-overlay">
       <div class="boot-sequence">
-        <p class="boot-blink">INITIALIZING...</p>
-        <div class="boot-progress" aria-label="Loading progress">
-          <span :style="{ width: `${displayedProgress}%` }"></span>
-        </div>
-        <p>LOADING ASSETS {{ displayedProgress }}%</p>
+        <img
+          src="/img/verbabke-logo@2x.png"
+          alt="Logo"
+          class="w-100 render-pixelated filter-to-textcolor"
+        />
+        <progress
+          class="nes-progress is-primary boot-progress"
+          :value="displayedProgress"
+          max="100"
+          aria-label="Loading progress"
+        ></progress>
       </div>
     </div>
   </Transition>
@@ -101,10 +112,28 @@ onBeforeUnmount(() => {
   inset: 0;
   display: grid;
   place-items: center;
-  background: #07120e;
-  color: #9df0b9;
-  font-family: "Share Tech Mono", monospace;
-  text-shadow: 0 0 8px #38e89a;
+  isolation: isolate;
+  background: var(--screen-color);
+  color: #050505;
+}
+
+.boot-logo {
+  filter: invert(39%) sepia(26%) saturate(592%) hue-rotate(103deg)
+    brightness(98%) contrast(97%);
+}
+
+.boot-progress {
+  height: 16px;
+}
+
+.boot-overlay::after {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  background: var(--screen-overlay);
+  mix-blend-mode: multiply;
+  content: "";
+  pointer-events: none;
 }
 
 .fade-overlay-enter-active,
@@ -123,38 +152,10 @@ onBeforeUnmount(() => {
 }
 
 .boot-sequence {
+  position: relative;
+  z-index: 0;
   display: grid;
-  width: min(62%, 300px);
+  width: min(62%, 400px);
   gap: 12px;
-}
-
-.boot-sequence p {
-  margin: 0;
-  font-size: clamp(11px, 1.5vw, 16px);
-  letter-spacing: 0.08em;
-}
-
-.boot-sequence .boot-blink {
-  animation: boot-blink 600ms steps(2, end) infinite;
-}
-
-.boot-progress {
-  height: 10px;
-  padding: 2px;
-  border: 1px solid #9df0b9;
-}
-
-.boot-progress span {
-  display: block;
-  height: 100%;
-  background: #9df0b9;
-  box-shadow: 0 0 8px #38e89a;
-  transition: width 120ms linear;
-}
-
-@keyframes boot-blink {
-  50% {
-    opacity: 0.35;
-  }
 }
 </style>

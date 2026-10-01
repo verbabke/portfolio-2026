@@ -60,6 +60,17 @@ export function useIconLayout({
   );
 
   function getLabelStyle(icon, index) {
+    if (isDetailOpen.value) {
+      // the opened icon has already moved to its docked position, so project
+      // that live world x through the camera the same way as landscape mode
+      const { left, right } = cameraFrame.value;
+      const percent = ((icon.position[0] - left) / (right - left)) * 100;
+
+      return {
+        left: `${percent}%`,
+      };
+    }
+
     if (isCompact.value) {
       const compactStep = 34;
       const dragPercent = (dragOffset.value / carouselSpacing) * compactStep;

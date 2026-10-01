@@ -1,5 +1,7 @@
 <script setup>
-defineProps({
+import { reactive, ref, watch } from "vue";
+
+const props = defineProps({
   icons: {
     type: Array,
     required: true,
@@ -7,6 +9,18 @@ defineProps({
   isDetailOpen: {
     type: Boolean,
     default: false,
+  },
+  openedIconId: {
+    type: String,
+    default: null,
+  },
+  isRevealingDetail: {
+    type: Boolean,
+    default: false,
+  },
+  isPositionSettled: {
+    type: Boolean,
+    default: true,
   },
   isCompact: {
     type: Boolean,
@@ -21,11 +35,39 @@ defineProps({
     required: true,
   },
 });
+
+const frozenStyles = reactive({});
+
+function captureStyles() {
+  props.icons.forEach((icon, index) => {
+    frozenStyles[icon.id] = props.getLabelStyle(icon, index);
+  });
+}
+
+const previousOpenedIconId = ref(props.openedIconId);
+
+watch(
+  () => props.isPositionSettled,
+  (settled) => {
+    if (settled) {
+      captureStyles();
+      previousOpenedIconId.value = props.openedIconId;
+    }
+  },
+);
+
+watch(
+  () => props.openedIconId,
+  (id, oldId) => {
+    if (oldId && !id) {
+      previousOpenedIconId.value = oldId;
+    }
+  },
+);
 </script>
 
 <template>
   <div
-    v-if="!isDetailOpen"
     class="icon-label-layer"
     :class="{ 'icon-label-layer-compact': isCompact }"
     aria-hidden="true"
@@ -34,8 +76,19 @@ defineProps({
       v-for="(icon, index) in icons"
       :key="`${icon.id}-label`"
       class="icon-label"
-      :class="{ 'icon-label-active': isIconFocused(index) }"
-      :style="getLabelStyle(icon, index)"
+      :class="{
+        'icon-label-active': isDetailOpen
+          ? icon.id === openedIconId && isRevealingDetail
+          : isIconFocused(index),
+        'icon-label-dismissed':
+          (isDetailOpen && icon.id !== openedIconId) ||
+          (!isDetailOpen &&
+            !isPositionSettled &&
+            icon.id === previousOpenedIconId),
+        'icon-label-pending':
+          isDetailOpen && icon.id === openedIconId && !isRevealingDetail,
+      }"
+      :style="frozenStyles[icon.id] ?? getLabelStyle(icon, index)"
     >
       {{ icon.label }}
     </div>
@@ -54,7 +107,7 @@ defineProps({
   --label-lift: 0px;
   position: absolute;
   bottom: 70px;
-  color: #0b2b24;
+  color: var(--text-color);
   font-size: 14px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -62,7 +115,6 @@ defineProps({
   white-space: nowrap;
   transform: translateX(-50%) translateY(var(--label-lift));
   transition:
-    left 180ms ease,
     opacity 180ms ease,
     transform 180ms ease,
     color 180ms ease;
@@ -70,6 +122,16 @@ defineProps({
 
 .icon-label-active {
   --label-lift: -10px;
+}
+
+.icon-label-dismissed {
+  opacity: 0;
+  transform: translateX(-50%) translateY(8px);
+  pointer-events: none;
+}
+
+.icon-label-pending {
+  opacity: 0;
 }
 
 .icon-label-layer-compact .icon-label {
