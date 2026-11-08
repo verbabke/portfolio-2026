@@ -12,6 +12,15 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
+  spinWhileHovered: {
+    type: Boolean,
+    default: true,
+  },
+  // hovering goes straight to the slow spin without the quick burst spin
+  burst: {
+    type: Boolean,
+    default: true,
+  },
   opacity: {
     type: Number,
     default: 1,
@@ -33,8 +42,7 @@ const props = defineProps({
 const icon = ref(null);
 const fullTurn = Math.PI * 2;
 const spinCount = 2;
-// higher = snaps into place faster
-const liftDamping = 8;
+const liftDamping = 8; // higher = snaps into place faster
 const alignDamping = 12;
 const idleSpinDamping = 10;
 const positionDamping = 3.8;
@@ -91,7 +99,6 @@ function applyOpacity(object, opacity) {
       if (!materialState.has(material)) {
         materialState.set(material, {
           opacity: material.opacity,
-          transparent: material.transparent,
           depthWrite: material.depthWrite,
         });
       }
@@ -106,7 +113,8 @@ function applyOpacity(object, opacity) {
       const isFaded = opacity < 0.999;
 
       material.opacity = nextOpacity;
-      material.transparent = isFaded ? true : baseState.transparent;
+      // Toggling this swaps the shader variant, which recompiles it mid-fade.
+      material.transparent = true;
       material.depthWrite = isFaded ? nextOpacity > 0.08 : baseState.depthWrite;
     }
   });
@@ -123,7 +131,7 @@ useLoop().onBeforeRender(({ delta, elapsed }) => {
   if (props.hovered) {
     if (!wasHovered) {
       frontFacingTarget = Math.round(spin / fullTurn) * fullTurn;
-      phase = "align";
+      phase = props.burst ? "align" : "slow";
     }
 
     if (phase === "align") {
@@ -148,8 +156,15 @@ useLoop().onBeforeRender(({ delta, elapsed }) => {
         burstTarget = null;
         phase = "slow";
       }
-    } else {
+    } else if (props.spinWhileHovered) {
       spin += 0.35 * delta;
+    } else {
+      spin = MathUtils.damp(
+        spin,
+        Math.round(spin / fullTurn) * fullTurn,
+        idleSpinDamping,
+        delta,
+      );
     }
   } else {
     burstTarget = null;

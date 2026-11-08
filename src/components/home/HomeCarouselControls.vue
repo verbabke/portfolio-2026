@@ -15,27 +15,31 @@ defineEmits(["select", "previous", "next"]);
 
 <template>
   <div
-    class="carousel-controls"
+    class="absolute inset-x-0 bottom-[clamp(10px,4vw,20px)] z-1 flex items-center justify-center gap-3 pointer-events-none *:pointer-events-auto"
     @pointerdown.stop
     @pointermove.stop
     @pointerup.stop
   >
     <button
       type="button"
-      class="nes-btn is-success"
+      class="carousel-key content-action ui-panel"
       aria-label="Previous"
       @click="$emit('previous')"
     >
-      Prev
+      &lt;
     </button>
 
-    <div class="carousel-indicator" role="group" aria-label="Carousel items">
+    <div
+      class="flex items-center gap-2"
+      role="group"
+      aria-label="Carousel items"
+    >
       <button
         v-for="(icon, index) in icons"
         :key="icon.id"
         type="button"
-        class="nes-btn"
-        :class="index === activeIndex ? 'is-primary' : ''"
+        class="carousel-key content-action ui-panel"
+        :class="{ 'carousel-key-active': index === activeIndex }"
         :aria-label="`Show ${icon.id}`"
         :aria-pressed="index === activeIndex"
         @click="$emit('select', index)"
@@ -46,36 +50,26 @@ defineEmits(["select", "previous", "next"]);
 
     <button
       type="button"
-      class="nes-btn is-success"
+      class="carousel-key content-action ui-panel"
       aria-label="Next"
       @click="$emit('next')"
     >
-      Next
+      &gt;
     </button>
   </div>
 </template>
 
 <style scoped>
-.carousel-controls {
-  position: absolute;
-  inset-inline: 0;
-  bottom: clamp(10px, 4vw, 20px);
-  z-index: 1;
-  display: flex;
-  align-items: center;
+.carousel-key {
+  min-width: 38px;
   justify-content: center;
-  gap: clamp(10px, 3vw, 18px);
-  pointer-events: none;
+  padding: 8px;
+  font-family: inherit;
+  cursor: pointer;
 }
 
-.carousel-controls > * {
-  pointer-events: auto;
-}
-
-.carousel-indicator {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  pointer-events: auto;
+.carousel-key-active {
+  background: var(--border-color);
+  color: var(--ui-bg);
 }
 </style>

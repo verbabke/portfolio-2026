@@ -1,29 +1,33 @@
 import { computed, ref } from "vue";
+import { useIndexedFocus } from "./useIndexedFocus";
 
-// Owns hover/focus/detail/drag state and the d-pad + pointer navigation rules
-// shared between the carousel and the detail view.
+// Owns icon-carousel focus, detail state, and compact-mode drag navigation.
 export function useSceneNavigation(iconDefinitions, isCompact) {
-  const hoveredIcon = ref(null);
-  const activeIndex = ref(0);
-  const showSelectionFocus = ref(false);
+  const focus = useIndexedFocus(iconDefinitions.length);
+  const {
+    focusedIndex: activeIndex,
+    hoveredIndex,
+    hasKeyboardFocus: showSelectionFocus,
+  } = focus;
+  const hoveredIcon = computed(
+    () => iconDefinitions[hoveredIndex.value]?.id ?? null,
+  );
   const openedIconId = ref(null);
 
   const isDetailOpen = computed(() => Boolean(openedIconId.value));
 
   const carouselSpacing = 7;
   const dragCommitThresholdPx = 40;
+  const dragStartThresholdPx = 8;
   const dragOffset = ref(0);
   const isDragging = ref(false);
   let dragStartX = null;
   let dragPointerId = null;
   let dragTravelPx = 1;
+  let dragTarget = null;
 
   function selectIcon(index) {
-    activeIndex.value = Math.max(
-      0,
-      Math.min(index, iconDefinitions.length - 1),
-    );
-    showSelectionFocus.value = true;
+    focus.setFocusedIndex(index);
   }
 
   function getFocusedIconIndex() {
@@ -35,15 +39,7 @@ export function useSceneNavigation(iconDefinitions, isCompact) {
       return activeIndex.value;
     }
 
-    if (hoveredIcon.value) {
-      return iconDefinitions.findIndex((icon) => icon.id === hoveredIcon.value);
-    }
-
-    if (showSelectionFocus.value) {
-      return activeIndex.value;
-    }
-
-    return -1;
+    return focus.getFocusedIndex();
   }
 
   // a given icon is "focused" whenever it's the one getFocusedIconIndex resolves to
@@ -56,14 +52,7 @@ export function useSceneNavigation(iconDefinitions, isCompact) {
       return;
     }
 
-    hoveredIcon.value = null;
-
-    if (getFocusedIconIndex() === -1) {
-      selectIcon(0);
-      return;
-    }
-
-    selectIcon(activeIndex.value + step);
+    focus.moveFocus(step, getFocusedIconIndex());
   }
 
   function selectPrevious() {
@@ -86,24 +75,19 @@ export function useSceneNavigation(iconDefinitions, isCompact) {
 
   function openDetail(index) {
     selectIcon(index);
-    hoveredIcon.value = null;
-    showSelectionFocus.value = false;
+    focus.clearFocus();
     endDrag();
     openedIconId.value = iconDefinitions[index]?.id ?? null;
   }
 
   function closeDetail() {
-    hoveredIcon.value = null;
-    showSelectionFocus.value = false;
+    focus.clearFocus();
     openedIconId.value = null;
   }
 
   function handleHoverChange(iconId, hovered) {
-    hoveredIcon.value = hovered ? iconId : null;
-
-    if (hovered) {
-      showSelectionFocus.value = false;
-    }
+    const index = iconDefinitions.findIndex((icon) => icon.id === iconId);
+    focus.setHoveredIndex(index, hovered && index !== -1);
   }
 
   function handleIconSelect(index) {
@@ -125,11 +109,10 @@ export function useSceneNavigation(iconDefinitions, isCompact) {
 
     dragStartX = event.clientX;
     dragPointerId = event.pointerId;
-    isDragging.value = true;
+    dragTarget = event.currentTarget;
 
     const rect = event.currentTarget.getBoundingClientRect();
     dragTravelPx = Math.max(rect.width * 0.5, 120);
-    event.currentTarget.setPointerCapture?.(event.pointerId);
   }
 
   function handleDragMove(event) {
@@ -138,6 +121,16 @@ export function useSceneNavigation(iconDefinitions, isCompact) {
     }
 
     const deltaPx = event.clientX - dragStartX;
+
+    if (!isDragging.value) {
+      if (Math.abs(deltaPx) < dragStartThresholdPx) {
+        return;
+      }
+
+      isDragging.value = true;
+      dragTarget?.setPointerCapture?.(event.pointerId);
+    }
+
     const rawOffset = (deltaPx / dragTravelPx) * carouselSpacing;
 
     dragOffset.value = Math.max(
@@ -149,6 +142,7 @@ export function useSceneNavigation(iconDefinitions, isCompact) {
   function endDrag() {
     dragStartX = null;
     dragPointerId = null;
+    dragTarget = null;
     isDragging.value = false;
     dragOffset.value = 0;
   }

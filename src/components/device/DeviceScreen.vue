@@ -1,3 +1,4 @@
+border: 1px solid var(--metal-trim);
 <script setup>
 defineProps({
   powered: {
@@ -32,7 +33,7 @@ defineProps({
   z-index: 0;
   inset: -4px;
   padding: 4px;
-  border: 1px solid #77756e;
+  border: 1px solid var(--metal-trim);
   border-radius: var(--bezel-radius);
   background: var(--metal-gradient);
   box-shadow: var(--metal-inset);
@@ -56,7 +57,7 @@ defineProps({
   isolation: isolate;
   border-radius: var(--screen-radius);
   clip-path: inset(0 round var(--screen-radius));
-  background: var(--screen-color);
+  background: var(--screen-bg);
 }
 
 .screen-off {
@@ -71,7 +72,7 @@ defineProps({
 .screen::before {
   content: "";
   position: absolute;
-  z-index: 2;
+  z-index: 5;
   inset: 0;
   pointer-events: none;
   border-radius: inherit;
@@ -85,7 +86,6 @@ defineProps({
   inset: 0;
   pointer-events: none;
   background: var(--screen-overlay);
-  mix-blend-mode: multiply;
 }
 
 .screen canvas {

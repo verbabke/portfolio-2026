@@ -37,13 +37,7 @@ function handleBootReveal() {
 }
 
 function handleDirection(direction) {
-  if (direction === "left") {
-    portfolioScene.value?.selectPrevious();
-  } else if (direction === "right") {
-    portfolioScene.value?.selectNext();
-  } else if (direction === "top" || direction === "bottom") {
-    portfolioScene.value?.handleVerticalDirection(direction);
-  }
+  portfolioScene.value?.handleDirection?.(direction);
 }
 
 function handleConfirm() {
@@ -51,7 +45,7 @@ function handleConfirm() {
 }
 
 function handleBack() {
-  portfolioScene.value?.closeDetail();
+  portfolioScene.value?.handleBack?.();
 }
 </script>
 

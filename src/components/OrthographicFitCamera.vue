@@ -28,7 +28,7 @@ const props = defineProps({
     type: Function,
     required: true,
   },
-  // if set skip auto-fit math entirely and just use this fixed frame
+  // if set skip auto-fit math and just use this fixed frame
   focusOverride: {
     type: Object,
     default: null,
@@ -42,9 +42,6 @@ const near = 0.1;
 const far = 100;
 const zoom = 1;
 const cameraDistance = 30;
-
-// padding multiplier eases from maxPaddingMultiplier down to minPaddingMultiplier as the
-// rendered width shrinks from paddingWidthMax down to paddingWidthMin (narrow screens need less slack)
 const maxPaddingMultiplier = 1.35;
 const minPaddingMultiplier = 1.15;
 const paddingWidthMax = 1400;
@@ -103,6 +100,8 @@ function applyCameraSettings() {
   emit("frame-change", {
     left: cameraSettings.x + cameraBounds.value.left,
     right: cameraSettings.x + cameraBounds.value.right,
+    top: cameraSettings.y + cameraBounds.value.top,
+    bottom: cameraSettings.y + cameraBounds.value.bottom,
   });
 }
 

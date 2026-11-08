@@ -75,20 +75,24 @@ watch(
     <div
       v-for="(icon, index) in icons"
       :key="`${icon.id}-label`"
-      class="icon-label"
+      class="icon-label select-none"
       :class="{
         'icon-label-active': isDetailOpen
           ? icon.id === openedIconId && isRevealingDetail
           : isIconFocused(index),
         'icon-label-dismissed':
-          (isDetailOpen && icon.id !== openedIconId) ||
+          (isDetailOpen && (icon.id !== openedIconId || isCompact)) ||
           (!isDetailOpen &&
             !isPositionSettled &&
             icon.id === previousOpenedIconId),
         'icon-label-pending':
           isDetailOpen && icon.id === openedIconId && !isRevealingDetail,
       }"
-      :style="frozenStyles[icon.id] ?? getLabelStyle(icon, index)"
+      :style="
+        isPositionSettled || (isDetailOpen && icon.id === openedIconId)
+          ? getLabelStyle(icon, index)
+          : (frozenStyles[icon.id] ?? getLabelStyle(icon, index))
+      "
     >
       {{ icon.label }}
     </div>
@@ -107,7 +111,7 @@ watch(
   --label-lift: 0px;
   position: absolute;
   bottom: 70px;
-  color: var(--text-color);
+  color: var(--screen-text);
   font-size: 14px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -135,14 +139,27 @@ watch(
 }
 
 .icon-label-layer-compact .icon-label {
-  bottom: 140px;
-  font-size: clamp(10px, 2vw, 13px);
+  bottom: 120px;
+  font-size: 14px;
+  transition:
+    left 300ms cubic-bezier(0.2, 0.75, 0.25, 1),
+    opacity 180ms ease,
+    transform 180ms ease,
+    color 180ms ease;
 }
 
-@media (max-width: 1000px) {
+@media (max-width: 640px) {
   .icon-label {
     bottom: 120px;
-    font-size: clamp(10px, 3vw, 14px);
+    font-size: 14px;
+  }
+}
+
+/* The icons shrink with the screen width, so the label grows as it narrows. */
+@media (min-width: 641px) and (max-width: 1140px) {
+  .icon-label {
+    bottom: clamp(64px, calc(64px + (900px - 100vw) / 30), 72px);
+    font-size: clamp(14px, calc(14px + (1140px - 100vw) / 250), 16px);
   }
 }
 </style>

@@ -2,7 +2,7 @@
 import { ref } from "vue";
 import { Box3, Vector3 } from "three";
 import { GLTFModel } from "@tresjs/cientos";
-import IconMotion from "./IconMotion.vue";
+import IconMotion from "../IconMotion.vue";
 
 const props = defineProps({
   hovered: {
@@ -18,6 +18,10 @@ const props = defineProps({
     default: () => [0, 0.25, 1.1],
   },
   interactive: {
+    type: Boolean,
+    default: true,
+  },
+  spinWhileHovered: {
     type: Boolean,
     default: true,
   },
@@ -63,6 +67,9 @@ const icon = ref(null);
 const boundsBox = new Box3();
 const boundsSize = new Vector3();
 const boundsCenter = new Vector3();
+const screenTextColor = getComputedStyle(document.documentElement)
+  .getPropertyValue("--screen-text")
+  .trim();
 
 const emit = defineEmits(["hover-change", "select"]);
 
@@ -112,41 +119,41 @@ defineExpose({
       <!-- Top-left corner -->
       <TresMesh :position="[-2.65, 3.2, 0]">
         <TresPlaneGeometry :args="[1.2, 0.16]" />
-        <TresMeshBasicMaterial color="#0b2b24" />
+        <TresMeshBasicMaterial :color="screenTextColor" />
       </TresMesh>
       <TresMesh :position="[-3.17, 2.68, 0]">
         <TresPlaneGeometry :args="[0.16, 1.2]" />
-        <TresMeshBasicMaterial color="#0b2b24" />
+        <TresMeshBasicMaterial :color="screenTextColor" />
       </TresMesh>
 
       <!-- Top-right corner -->
       <TresMesh :position="[2.65, 3.2, 0]">
         <TresPlaneGeometry :args="[1.2, 0.16]" />
-        <TresMeshBasicMaterial color="#0b2b24" />
+        <TresMeshBasicMaterial :color="screenTextColor" />
       </TresMesh>
       <TresMesh :position="[3.17, 2.68, 0]">
         <TresPlaneGeometry :args="[0.16, 1.2]" />
-        <TresMeshBasicMaterial color="#0b2b24" />
+        <TresMeshBasicMaterial :color="screenTextColor" />
       </TresMesh>
 
       <!-- Bottom-left corner -->
       <TresMesh :position="[-2.65, -2.7, 0]">
         <TresPlaneGeometry :args="[1.2, 0.16]" />
-        <TresMeshBasicMaterial color="#0b2b24" />
+        <TresMeshBasicMaterial :color="screenTextColor" />
       </TresMesh>
       <TresMesh :position="[-3.17, -2.18, 0]">
         <TresPlaneGeometry :args="[0.16, 1.2]" />
-        <TresMeshBasicMaterial color="#0b2b24" />
+        <TresMeshBasicMaterial :color="screenTextColor" />
       </TresMesh>
 
       <!-- Bottom-right corner -->
       <TresMesh :position="[2.65, -2.7, 0]">
         <TresPlaneGeometry :args="[1.2, 0.16]" />
-        <TresMeshBasicMaterial color="#0b2b24" />
+        <TresMeshBasicMaterial :color="screenTextColor" />
       </TresMesh>
       <TresMesh :position="[3.17, -2.18, 0]">
         <TresPlaneGeometry :args="[0.16, 1.2]" />
-        <TresMeshBasicMaterial color="#0b2b24" />
+        <TresMeshBasicMaterial :color="screenTextColor" />
       </TresMesh>
     </TresGroup>
   </IconMotion>
@@ -154,6 +161,7 @@ defineExpose({
   <IconMotion
     ref="icon"
     :hovered="hovered"
+    :spin-while-hovered="spinWhileHovered"
     :opacity="opacity"
     :opacity-damping="opacityDamping"
     :position="position"

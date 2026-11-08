@@ -61,13 +61,7 @@ defineEmits(["toggle-power"]);
   position: relative;
   width: var(--round-control-size);
   aspect-ratio: 1;
-  border: 1px solid #161817;
-  border-radius: 50%;
   background: linear-gradient(145deg, #818181, #1c1e1d);
-  box-shadow:
-    inset 1px 1px #ffffff42,
-    inset -2px -2px #2b2c2c,
-    1px 2px 3px #00000080;
 }
 
 .power-button span {

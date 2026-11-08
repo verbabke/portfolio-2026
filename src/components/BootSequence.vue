@@ -90,9 +90,9 @@ onBeforeUnmount(() => {
     <div v-show="isVisible" class="boot-overlay">
       <div class="boot-sequence">
         <img
-          src="/img/verbabke-logo@2x.png"
+          src="/img/logo/verbabke-logo-full.png"
           alt="Logo"
-          class="w-100 render-pixelated filter-to-textcolor"
+          class="w-100 render-pixelated filter-screen-text"
         />
         <progress
           class="nes-progress is-primary boot-progress"
@@ -113,13 +113,8 @@ onBeforeUnmount(() => {
   display: grid;
   place-items: center;
   isolation: isolate;
-  background: var(--screen-color);
+  background: var(--screen-bg);
   color: #050505;
-}
-
-.boot-logo {
-  filter: invert(39%) sepia(26%) saturate(592%) hue-rotate(103deg)
-    brightness(98%) contrast(97%);
 }
 
 .boot-progress {
@@ -131,7 +126,6 @@ onBeforeUnmount(() => {
   z-index: 1;
   inset: 0;
   background: var(--screen-overlay);
-  mix-blend-mode: multiply;
   content: "";
   pointer-events: none;
 }

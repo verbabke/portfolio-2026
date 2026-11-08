@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22 22">
+  <defs>
+    <style>
+      .cls-1 {
+        fill-rule: evenodd;
+      }
+    </style>
+  </defs>
+  <g id="Adobe-Premiere-Pro-Logo--Streamline-Logos-Block">
+    <path class="cls-1" d="M4,0C1.79,0,0,1.79,0,4v14c0,2.21,1.79,4,4,4h14c2.21,0,4-1.79,4-4V4c0-2.21-1.79-4-4-4H4ZM6,5.5h-1v10h2v-3h1.5c1.93,0,3.5-1.57,3.5-3.5s-1.57-3.5-3.5-3.5h-2.5ZM8.5,10.5h-1.5v-3h1.5c.83,0,1.5.67,1.5,1.5s-.67,1.5-1.5,1.5ZM13.5,8v7.5h2v-4.25c.19-.33.45-.62.77-.82.38-.24.92-.43,1.73-.43v-2c-.98,0-1.81.2-2.5.56v-.56h-2Z"/>
+  </g>
+</svg>
