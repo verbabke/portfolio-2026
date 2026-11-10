@@ -68,7 +68,7 @@ defineEmits(["toggle-power", "direction", "confirm", "back"]);
   --case-edge: #716f68;
   --bezel-dark: #151918;
   --bezel-edge: #5d5d56;
-  --screen-shadow: #05231c;
+  --screen-shadow: #0b4437;
   --light-highlight: #ffffff52;
   --light-shadow: #1b1c1a66;
   --metal-trim: #77756e;
@@ -94,7 +94,7 @@ defineEmits(["toggle-power", "direction", "confirm", "back"]);
   --metal-ring-shadow:
     inset 2px 2px 3px var(--light-highlight), inset 0 -1px 0 #b6b1a5,
     inset -2px -4px 6px var(--light-shadow), 0 4px 7px #111111a8;
-  --screen-glow: inset 0 0 32px var(--screen-shadow), inset 0 0 4px 2px #e7fff4;
+  --screen-glow: inset 0 0 18px var(--screen-shadow), inset 0 0 4px 2px #e7fff4;
   --panel-border: #30312e;
   --panel-surface: linear-gradient(135deg, #96938a, #aaa69b 65%, #898780);
   --panel-inset:

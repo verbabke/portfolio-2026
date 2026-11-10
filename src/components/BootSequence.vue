@@ -126,6 +126,7 @@ onBeforeUnmount(() => {
   z-index: 1;
   inset: 0;
   background: var(--screen-overlay);
+  box-shadow: var(--screen-glow);
   content: "";
   pointer-events: none;
 }

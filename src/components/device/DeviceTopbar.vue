@@ -1,13 +1,24 @@
 <script setup>
+import { ref, watch } from "vue";
 import DeviceSocials from "./DeviceSocials.vue";
 import DeviceSpeaker from "./DeviceSpeaker.vue";
+import FadeTransition from "../FadeTransition.vue";
 
-defineProps({
+const props = defineProps({
   powered: {
     type: Boolean,
     default: false,
   },
 });
+
+const hasPoweredOn = ref(props.powered);
+
+watch(
+  () => props.powered,
+  (powered) => {
+    if (powered) hasPoweredOn.value = true;
+  },
+);
 
 defineEmits(["toggle-power"]);
 </script>
@@ -23,15 +34,31 @@ defineEmits(["toggle-power"]);
         ></span>
         <p class="emboss-txt select-none">Bat</p>
       </div>
-      <button
-        class="device-button power-button nes-cursor-pointer"
-        type="button"
-        aria-label="Power"
-        :aria-pressed="powered"
-        @click="$emit('toggle-power')"
-      >
-        <span aria-hidden="true"></span>
-      </button>
+      <div class="power-control">
+        <button
+          class="device-button power-button nes-cursor-pointer"
+          type="button"
+          aria-label="Power"
+          :aria-pressed="powered"
+          @click="$emit('toggle-power')"
+        >
+          <span aria-hidden="true"></span>
+        </button>
+
+        <FadeTransition>
+          <div
+            v-if="!hasPoweredOn"
+            class="power-hint select-none"
+            aria-hidden="true"
+            @click="$emit('toggle-power')"
+          >
+            <div class="power-hint-bob">
+              <span class="power-hint-arrow"></span>
+              <span class="power-hint-label ui-panel">Power on</span>
+            </div>
+          </div>
+        </FadeTransition>
+      </div>
     </div>
 
     <div class="screen-top-vents" aria-hidden="true">
@@ -55,6 +82,63 @@ defineEmits(["toggle-power"]);
   display: grid;
   justify-items: center;
   gap: 4px;
+}
+
+.power-control {
+  position: relative;
+  display: flex;
+}
+
+.power-hint {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 50%;
+  z-index: 3;
+  width: max-content;
+  transform: translateX(-50%);
+  cursor: pointer;
+}
+
+.power-hint-bob {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: power-hint-bob 1s ease-in-out infinite;
+}
+
+.power-hint-arrow {
+  width: 0;
+  height: 0;
+  border-right: 7px solid transparent;
+  border-bottom: 9px solid var(--ui-text);
+  border-left: 7px solid transparent;
+}
+
+.power-hint-label {
+  padding: 5px 8px;
+  background: var(--ui-bg);
+  color: var(--ui-text);
+  font: 11px "Share Tech Mono", monospace;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+@keyframes power-hint-bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(5px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .power-hint-bob {
+    animation: none;
+  }
 }
 
 .power-button {

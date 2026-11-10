@@ -23,12 +23,17 @@ export const projects = [
       {
         images: [
           {
-            src: "/img/projects/like_insects_7.jpg",
-            alt: "Photoshoot picture",
-            caption: "The entire collection together",
+            src: "/img/projects/like_insects_3.jpeg",
+            alt: "Dutch Design Week 2026 exhibition",
+            caption: "Dutch Design Week 2026 exhibition",
+          },
+          {
+            src: "/img/projects/like_insects_2.jpg",
+            alt: "GLOW 2026 exhibition",
+            caption: "GLOW 2026 exhibition",
           },
         ],
-        columns: 1,
+        columns: 2,
       },
       {
         side: "right",
@@ -42,21 +47,15 @@ export const projects = [
         columns: 1,
         text: "The project was showcased at [Dutch Design Week](https://ddw.nl/en/programme/archive/2025/fashion-tech-like-insects) and [GLOW Eindhoven 2026](https://gloweindhoven.nl/project/like-insects-summa-fashion-fontys-technology-anouk-wipprecht/).\n\nFor DDW, distance sensors triggered servos to move butterfly and dragonfly wings as people approached. For GLOW, a camera detected visitors stepping onto a spot to start a show with lighting and mechanical flowers that bloomed in response.",
       },
-
       {
         images: [
           {
-            src: "/img/projects/like_insects_3.jpeg",
-            alt: "Dutch Design Week 2026 exhibition",
-            caption: "Dutch Design Week 2026 exhibition",
-          },
-          {
-            src: "/img/projects/like_insects_2.jpg",
-            alt: "GLOW 2026 exhibition",
-            caption: "GLOW 2026 exhibition",
+            src: "/img/projects/like_insects_7.jpg",
+            alt: "Photoshoot picture",
+            caption: "The entire collection together",
           },
         ],
-        columns: 2,
+        columns: 1,
       },
     ],
     type: "School Project",
@@ -100,7 +99,7 @@ export const projects = [
   {
     id: "pod-data",
     title: "Pod Data",
-    descriptionShort: "Completion tracker webapp for NieR: Automata",
+    descriptionShort: "Completion tracker webapp for NieR: Automata.",
     content: [
       {
         side: "left",

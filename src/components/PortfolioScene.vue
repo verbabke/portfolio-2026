@@ -231,6 +231,7 @@ defineExpose({
       'scene-visible': visible,
       'scene-compact': isCompact,
       'scene-dragging': isDragging,
+      'nes-cursor-pointer': hoveredIcon && !isDragging,
     }"
     @pointerdown="handleDragStart"
     @pointermove="handleDragMove"

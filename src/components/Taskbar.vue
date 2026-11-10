@@ -44,7 +44,7 @@ function rightEdge(height) {
     >
       <img
         src="/img/logo/verbabke-logo-icon-sm.png"
-        class="render-pixelated filter-ui-text"
+        class="render-pixelated filter-ui-text nes-cursor-pointer"
         alt=""
       />
     </button>

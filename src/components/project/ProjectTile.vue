@@ -34,7 +34,7 @@ const style = computed(() => {
 <template>
   <button
     type="button"
-    class="project-tile"
+    class="project-tile nes-cursor-pointer"
     data-snap-item
     :style="style"
     :aria-label="`${project.title}, ${project.type}`"
