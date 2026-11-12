@@ -15,7 +15,7 @@
   --ui-text: #1f5c4e;
   --filter-ui-text: brightness(0) saturate(100%) invert(26%) sepia(57%) saturate(453%) hue-rotate(116deg) brightness(99%) contrast(91%);
   --border-color: var(--screen-text);
-  --screen-pad: clamp(20px, 4vw, 32px);
+  --screen-pad: clamp(8px, 3vw, 32px);
   --page-background: #16191a;
   --page-glow: #707356;
   --scanlines: repeating-linear-gradient(0deg, #002d2220 0 1px, transparent 1px 4px);
