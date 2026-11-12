@@ -126,7 +126,7 @@
     display: none;
   }
 
-  .top-speaker-panel {
+  /* .top-speaker-panel {
     display: flex;
     align-items: center;
     justify-content: end;
@@ -137,7 +137,7 @@
     border: solid var(--panel-border);
     border-width: 0 0 1px 1px;
     border-radius: 0 var(--device-radius) 0 12px;
-  }
+  } */
 
   .top-speaker-panel .speaker-label {
     width: auto;

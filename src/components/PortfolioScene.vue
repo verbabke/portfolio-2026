@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref, watch } from "vue";
+import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
 import { TresCanvas, extend } from "@tresjs/core";
 import {
   BrightnessContrastPmndrs,
@@ -61,7 +61,18 @@ const screenColor = getComputedStyle(document.documentElement)
   .getPropertyValue("--screen-bg")
   .trim();
 const aspectRatio = ref(1);
-const isCompact = computed(() => aspectRatio.value < compactAspectThreshold);
+const mobileViewport = window.matchMedia("(max-width: 640px)");
+const isMobileViewport = ref(mobileViewport.matches);
+const updateMobileViewport = (event) => {
+  isMobileViewport.value = event.matches;
+};
+onMounted(() => mobileViewport.addEventListener("change", updateMobileViewport));
+onBeforeUnmount(() =>
+  mobileViewport.removeEventListener("change", updateMobileViewport),
+);
+const isCompact = computed(
+  () => isMobileViewport.value || aspectRatio.value < compactAspectThreshold,
+);
 const cameraFrame = ref({ left: -8, right: 8, top: 8, bottom: -8 });
 const sceneElement = ref(null);
 

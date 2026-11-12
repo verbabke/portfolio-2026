@@ -134,7 +134,7 @@ const socialLinks = [
   }
 }
 
-@media (max-width: 640px) {
+/* @media (max-width: 640px) {
   .top-social-panel {
     display: none;
   }
@@ -153,5 +153,5 @@ const socialLinks = [
   .top-social-panel .emboss-txt {
     display: none;
   }
-}
+} */
 </style>
