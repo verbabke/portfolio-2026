@@ -109,6 +109,12 @@ body {
   flex: none;
 }
 
+@media (max-width: 640px) {
+  .content-scroll {
+    gap: 24px;
+  }
+}
+
 .content-panel {
   display: flex;
   flex-direction: column;

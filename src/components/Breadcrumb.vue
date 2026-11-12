@@ -34,6 +34,14 @@ defineEmits(["select"]);
 <style scoped>
 .breadcrumb {
   color: var(--screen-text);
+  overflow: hidden;
+  white-space: nowrap;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+
+  ::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 .breadcrumb button {

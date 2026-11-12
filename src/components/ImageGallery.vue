@@ -43,9 +43,12 @@ defineEmits(["open"]);
   grid-template-columns: repeat(
     auto-fill,
     minmax(
-      max(
-        180px,
-        calc((100% - (var(--columns) - 1) * var(--gap)) / var(--columns))
+      min(
+        100%,
+        max(
+          180px,
+          calc((100% - (var(--columns) - 1) * var(--gap)) / var(--columns))
+        )
       ),
       1fr
     )
@@ -56,6 +59,7 @@ defineEmits(["open"]);
   display: flex;
   flex-direction: column;
   gap: 8px;
+  min-width: 0;
   margin: 0;
 }
 
