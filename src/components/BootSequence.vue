@@ -88,7 +88,7 @@ onBeforeUnmount(() => {
     @before-leave="handleFadeOutStart"
     @after-leave="handleFadeOutComplete"
   >
-    <div v-show="isVisible" class="boot-overlay">
+    <div v-show="!isVisible" class="boot-overlay">
       <div class="boot-sequence" :style="{ '--logo-aspect': logoAspect }">
         <img
           src="/img/logo/verbabke-logo-full.png"
@@ -121,7 +121,7 @@ onBeforeUnmount(() => {
   isolation: isolate;
   background: var(--screen-bg);
   color: #050505;
-  padding: var(--screen-pad);
+  padding: 24px;
 }
 
 .boot-progress {
