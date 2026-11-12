@@ -88,7 +88,7 @@ onBeforeUnmount(() => {
     @before-leave="handleFadeOutStart"
     @after-leave="handleFadeOutComplete"
   >
-    <div v-show="!isVisible" class="boot-overlay">
+    <div v-show="isVisible" class="boot-overlay">
       <div class="boot-sequence" :style="{ '--logo-aspect': logoAspect }">
         <img
           src="/img/logo/verbabke-logo-full.png"
