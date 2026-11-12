@@ -53,7 +53,7 @@ onBeforeUnmount(() => window.removeEventListener("keydown", onKeydown));
     <FadeTransition>
       <div
         v-if="image"
-        class="lightbox fade-layer"
+        class="modal-overlay lightbox fade-layer"
         role="dialog"
         aria-modal="true"
         :aria-label="image.alt"
@@ -115,14 +115,10 @@ onBeforeUnmount(() => window.removeEventListener("keydown", onKeydown));
 
 <style scoped>
 .lightbox {
-  position: fixed;
-  z-index: 50;
-  inset: 0;
   display: flex;
   flex-direction: column;
   gap: 12px;
   padding: 16px;
-  background: rgb(0 0 0 / 0.85);
   color: #fff;
   cursor: zoom-out;
 }
