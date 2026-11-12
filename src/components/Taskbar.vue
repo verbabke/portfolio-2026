@@ -285,4 +285,20 @@ function rightEdge(height) {
   width: 8px;
   height: 8px;
 }
+
+@media (max-width: 640px) {
+  .taskbar-tabs {
+    display: none;
+  }
+}
+
+@media (max-width: 500px) {
+  /* .taskbar {
+    display: none;
+  } */
+
+  .taskbar-home {
+    display: none;
+  }
+}
 </style>

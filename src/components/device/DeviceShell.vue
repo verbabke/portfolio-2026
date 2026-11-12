@@ -184,7 +184,7 @@ defineEmits(["toggle-power", "direction", "confirm", "back"]);
     grid-template-rows: auto minmax(0, 1fr) auto auto;
     height: 100%;
     column-gap: 0;
-    row-gap: 24px;
+    /* row-gap: 24px; */
   }
 }
 </style>

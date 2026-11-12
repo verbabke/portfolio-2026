@@ -317,9 +317,9 @@ defineExpose({
 }
 
 .project-carousel {
-  --edge: 110px;
+  --edge: min(110px, 42.5cqh);
   /* How far the next tile's top edge sits from the list centre, minus the gap and the peek. */
-  --reach: 169px;
+  --reach: calc(var(--edge) + 59px);
   --gap-max: 50px;
   position: absolute;
   z-index: 1;
@@ -327,6 +327,7 @@ defineExpose({
   display: flex;
   flex-direction: column;
   align-items: center;
+  container-type: size;
   gap: clamp(0px, calc(50% - var(--reach)), var(--gap-max));
   width: min(66%, 800px);
   overflow-x: hidden;
@@ -360,8 +361,9 @@ defineExpose({
 }
 
 .projects-panel-compact .project-carousel {
-  --edge: 100px;
+  --edge: min(100px, 42.5cqh);
   --gap-max: 98px;
+  top: calc(var(--screen-pad) + 14px);
   width: 100%;
 }
 
@@ -371,7 +373,7 @@ defineExpose({
 
 @media (max-width: 640px) {
   .project-carousel {
-    --reach: 156px;
+    --reach: calc(var(--edge) + 56px);
   }
 }
 

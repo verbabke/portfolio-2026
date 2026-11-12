@@ -15,6 +15,7 @@ export function useIconLayout({
   dragOffset,
   carouselSpacing,
   cameraFrame,
+  sceneHeight,
 }) {
   // active icon sits at x=0,
   // neighbors peek out on either side
@@ -64,9 +65,18 @@ export function useIconLayout({
     })),
   );
 
-  const focusOverride = computed(() =>
-    isCompact.value ? { viewHeight: carouselViewHeight, x: 0, y: 0 } : null,
-  );
+  const focusOverride = computed(() => {
+    if (!isCompact.value) return null;
+
+    const shortScreen = sceneHeight.value
+      ? Math.min(1, Math.max(0, (220 - sceneHeight.value) / 80))
+      : 0;
+    return {
+      viewHeight: carouselViewHeight + 15 * shortScreen,
+      x: 0,
+      y: -7 * shortScreen,
+    };
+  });
 
   // projects the icon's world x through the camera's live frame, so the label
   // stays under it across breakpoints and slides off screen along with it

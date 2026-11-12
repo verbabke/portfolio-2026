@@ -15,7 +15,7 @@ defineEmits(["select", "previous", "next"]);
 
 <template>
   <div
-    class="absolute inset-x-0 bottom-[clamp(10px,4vw,20px)] z-1 flex items-center justify-center gap-3 pointer-events-none *:pointer-events-auto"
+    class="carousel-controls absolute inset-x-0 bottom-[clamp(10px,4vw,20px)] z-1 flex items-center justify-center gap-3 pointer-events-none *:pointer-events-auto"
     @pointerdown.stop
     @pointermove.stop
     @pointerup.stop
@@ -71,5 +71,12 @@ defineEmits(["select", "previous", "next"]);
 .carousel-key-active {
   background: var(--border-color);
   color: var(--ui-bg);
+}
+
+@media (max-width: 640px) {
+  .carousel-controls {
+    bottom: -20px;
+    z-index: 5;
+  }
 }
 </style>

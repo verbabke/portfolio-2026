@@ -15,7 +15,6 @@
   --ui-text: #1f5c4e;
   --filter-ui-text: brightness(0) saturate(100%) invert(26%) sepia(57%) saturate(453%) hue-rotate(116deg) brightness(99%) contrast(91%);
   --border-color: var(--screen-text);
-  --header-height: 62px;
   --screen-pad: clamp(20px, 4vw, 32px);
   --page-background: #16191a;
   --page-glow: #707356;
@@ -25,6 +24,17 @@
   background: var(--page-background);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
+
+  --header-height: 62px;
+
+  @media (max-width: 640px) {
+    --header-height: 48px;
+  }
+
+  @media (max-width: 500px) {
+    --header-height: 36px;
+  }
+
 }
 
 * {

@@ -66,7 +66,9 @@ const isMobileViewport = ref(mobileViewport.matches);
 const updateMobileViewport = (event) => {
   isMobileViewport.value = event.matches;
 };
-onMounted(() => mobileViewport.addEventListener("change", updateMobileViewport));
+onMounted(() =>
+  mobileViewport.addEventListener("change", updateMobileViewport),
+);
 onBeforeUnmount(() =>
   mobileViewport.removeEventListener("change", updateMobileViewport),
 );
@@ -75,6 +77,17 @@ const isCompact = computed(
 );
 const cameraFrame = ref({ left: -8, right: 8, top: 8, bottom: -8 });
 const sceneElement = ref(null);
+const sceneHeight = ref(0);
+let sceneResizeObserver;
+
+onMounted(() => {
+  sceneResizeObserver = new ResizeObserver(([entry]) => {
+    sceneHeight.value = entry.contentRect.height;
+  });
+  sceneResizeObserver.observe(sceneElement.value);
+});
+
+onBeforeUnmount(() => sceneResizeObserver?.disconnect());
 
 const {
   hoveredIcon,
@@ -108,6 +121,7 @@ const { icons, focusOverride, getLabelStyle } = useIconLayout({
   dragOffset,
   carouselSpacing,
   cameraFrame,
+  sceneHeight,
 });
 
 const { projectTileLayout, projectTileModels } = useProjectTiles({
@@ -242,6 +256,7 @@ defineExpose({
       'scene-visible': visible,
       'scene-compact': isCompact,
       'scene-dragging': isDragging,
+      'scene-detail-open': isDetailOpen,
       'nes-cursor-pointer': hoveredIcon && !isDragging,
     }"
     @pointerdown="handleDragStart"
@@ -371,6 +386,7 @@ defineExpose({
 
   <Taskbar
     v-show="visible"
+    :class="{ 'taskbar-detail-open': isDetailOpen }"
     :tabs="tabs"
     :active-index="activeProjectIndex"
     @back="closeDetail"
@@ -387,6 +403,16 @@ defineExpose({
   inset: 0 0 var(--header-height) 0;
   visibility: hidden;
   font-family: "Press Start 2P", monospace;
+}
+
+@media (width < 500px) {
+  .scene-detail-open {
+    --header-height: 0px;
+  }
+
+  .taskbar-detail-open {
+    display: none;
+  }
 }
 
 .section-path {

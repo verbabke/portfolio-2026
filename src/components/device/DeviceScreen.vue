@@ -72,7 +72,7 @@ defineProps({
 .screen::before {
   content: "";
   position: absolute;
-  z-index: 5;
+  z-index: 6;
   inset: 0;
   pointer-events: none;
   border-radius: inherit;

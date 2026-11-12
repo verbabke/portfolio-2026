@@ -103,6 +103,7 @@ watch(
 .icon-label-layer {
   position: absolute;
   inset: 0;
+  container-type: size;
   pointer-events: none;
   z-index: 1;
 }
@@ -110,7 +111,7 @@ watch(
 .icon-label {
   --label-lift: 0px;
   position: absolute;
-  bottom: 70px;
+  bottom: min(70px, 18%);
   color: var(--screen-text);
   font-size: 14px;
   letter-spacing: 0.08em;
@@ -139,7 +140,7 @@ watch(
 }
 
 .icon-label-layer-compact .icon-label {
-  bottom: 120px;
+  bottom: max(64px, min(120px, 18%));
   font-size: 14px;
   transition:
     left 300ms cubic-bezier(0.2, 0.75, 0.25, 1),
@@ -148,9 +149,15 @@ watch(
     color 180ms ease;
 }
 
+@container (max-height: 220px) {
+  .icon-label-layer-compact .icon-label:not(.icon-label-active) {
+    opacity: 0;
+  }
+}
+
 @media (max-width: 640px) {
-  .icon-label {
-    bottom: 120px;
+  .icon-label-layer-compact .icon-label {
+    bottom: max(32px, min(64px, 12%));
     font-size: 14px;
   }
 }
@@ -158,7 +165,7 @@ watch(
 /* The icons shrink with the screen width, so the label grows as it narrows. */
 @media (min-width: 641px) and (max-width: 1140px) {
   .icon-label {
-    bottom: clamp(64px, calc(64px + (900px - 100vw) / 30), 72px);
+    bottom: min(18%, clamp(64px, calc(64px + (900px - 100vw) / 30), 72px));
     font-size: clamp(14px, calc(14px + (1140px - 100vw) / 250), 16px);
   }
 }

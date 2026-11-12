@@ -44,7 +44,7 @@ defineEmits(["direction", "confirm", "back"]);
 
 <style>
 .button-panel {
-  --d-pad-size: clamp(104px, 13vw, 140px);
+  --d-pad-size: clamp(90px, 24vw, 124px);
   --console-button-width: 72px;
   --console-panel-gap: 16px;
   position: relative;
@@ -258,6 +258,11 @@ defineEmits(["direction", "confirm", "back"]);
     --console-button-width: clamp(48px, 19vw, 60px);
     flex-grow: 1;
     justify-content: space-evenly;
+    margin-bottom: 0;
+  }
+
+  .d-pad-direction::before {
+    border-width: 0 5px 5px 0;
   }
 
   .console-buttons {
@@ -268,6 +273,18 @@ defineEmits(["direction", "confirm", "back"]);
   .console-button {
     height: 100%;
     font-size: clamp(10px, 2.5vw, 14px);
+  }
+}
+
+@media (max-width: 640px) {
+  @media (max-height: 550px) {
+    .button-panel {
+      display: none;
+    }
+    .device-shell .console {
+      grid-template-rows: auto minmax(0, 1fr);
+      padding: var(--console-padding) var(--console-padding) !important;
+    }
   }
 }
 </style>

@@ -58,16 +58,25 @@ const panelOffsets = computed(() => {
 const openImage = ref(-1);
 
 const iconReady = ref(false);
+const iconViewport = window.matchMedia("(min-width: 500px)");
+const showDetailIcon = ref(iconViewport.matches);
+const updateIconViewport = (event) => {
+  showDetailIcon.value = event.matches;
+};
 const iconDelayMs = 260;
 let iconTimer = 0;
 
 onMounted(() => {
+  iconViewport.addEventListener("change", updateIconViewport);
   iconTimer = setTimeout(() => {
     iconReady.value = true;
   }, iconDelayMs);
 });
 
-onBeforeUnmount(() => clearTimeout(iconTimer));
+onBeforeUnmount(() => {
+  clearTimeout(iconTimer);
+  iconViewport.removeEventListener("change", updateIconViewport);
+});
 
 // Scrolls by roughly a page
 // Used by the D-pad
@@ -95,7 +104,7 @@ defineExpose({ scrollBy });
     />
 
     <header class="project-detail-head">
-      <div class="project-detail-icon">
+      <div v-if="showDetailIcon" class="project-detail-icon">
         <FadeTransition>
           <ProjectDetailIcon
             v-if="iconReady"
@@ -195,6 +204,12 @@ defineExpose({ scrollBy });
   align-items: center;
   gap: 24px;
   color: var(--screen-text);
+}
+
+@media (width < 500px) {
+  .project-detail-head {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }
 
 /* Text and images next to each other; stacked on narrow screens. */

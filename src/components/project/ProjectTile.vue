@@ -55,17 +55,17 @@ const style = computed(() => {
 
 <style scoped>
 .project-tile {
-  --raise: 28px;
+  --raise: clamp(0px, (100cqh - 160px) * 0.2, 28px);
   position: relative;
   flex: 0 0 auto;
   scroll-snap-align: center;
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  grid-template-rows: 110px auto;
+  grid-template-rows: min(110px, 35cqh) minmax(0, 1fr);
   align-items: center;
   justify-items: start;
   width: min(66%, 350px);
-  height: 220px;
+  height: min(220px, 85cqh);
   gap: 7px;
   padding: 10px 16px;
   border: 1px solid transparent;
@@ -80,8 +80,8 @@ const style = computed(() => {
   grid-column: 1;
   grid-row: 1;
   justify-self: center;
-  width: 106px;
-  height: 106px;
+  width: min(106px, 33cqh);
+  height: min(106px, 33cqh);
   transform: translateY(calc(-1 * var(--raise)));
 }
 
@@ -119,20 +119,41 @@ const style = computed(() => {
 
 @media (max-width: 640px) {
   .project-tile {
-    grid-template-rows: 88px auto;
+    grid-template-rows: min(88px, 35cqh) minmax(0, 1fr);
     width: min(88%, 270px);
-    height: 200px;
+    height: min(200px, 85cqh);
     gap: 5px;
     padding: 7px 10px;
   }
 
   .project-tile-icon {
-    width: 84px;
-    height: 84px;
+    width: min(84px, 33cqh);
+    height: min(84px, 33cqh);
   }
 
   .project-tile-description {
     font-size: 15px;
+  }
+}
+
+@container (max-height: 200px) {
+  .project-tile-copy {
+    padding: 2px 4px;
+  }
+
+  .project-tile-title {
+    display: -webkit-box;
+    overflow: hidden;
+    font-size: 11px;
+    line-height: 1.25;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+
+  .project-tile-description {
+    font-size: 12px;
+    -webkit-line-clamp: 1;
+    line-clamp: 1;
   }
 }
 </style>

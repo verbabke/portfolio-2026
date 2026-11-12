@@ -22,6 +22,7 @@ const emit = defineEmits(["complete", "reveal"]);
 
 const isBooting = ref(false);
 const timedProgress = ref(0);
+const logoAspect = ref(1);
 const displayedProgress = computed(() =>
   Math.min(props.progress, Math.round(timedProgress.value)),
 );
@@ -88,11 +89,15 @@ onBeforeUnmount(() => {
     @after-leave="handleFadeOutComplete"
   >
     <div v-show="isVisible" class="boot-overlay">
-      <div class="boot-sequence">
+      <div class="boot-sequence" :style="{ '--logo-aspect': logoAspect }">
         <img
           src="/img/logo/verbabke-logo-full.png"
           alt="Logo"
-          class="w-100 render-pixelated filter-screen-text"
+          class="logo render-pixelated filter-screen-text"
+          @load="
+            logoAspect =
+              $event.target.naturalWidth / $event.target.naturalHeight
+          "
         />
         <progress
           class="nes-progress is-primary boot-progress"
@@ -112,13 +117,17 @@ onBeforeUnmount(() => {
   inset: 0;
   display: grid;
   place-items: center;
+  container-type: size;
   isolation: isolate;
   background: var(--screen-bg);
   color: #050505;
+  padding: var(--screen-pad);
 }
 
 .boot-progress {
+  width: 100%;
   height: 16px;
+  margin: 0;
 }
 
 .boot-overlay::after {
@@ -129,6 +138,12 @@ onBeforeUnmount(() => {
   box-shadow: var(--screen-glow);
   content: "";
   pointer-events: none;
+}
+
+.logo {
+  display: block;
+  width: 100%;
+  height: auto;
 }
 
 .fade-overlay-enter-active,
@@ -150,7 +165,10 @@ onBeforeUnmount(() => {
   position: relative;
   z-index: 0;
   display: grid;
-  width: min(62%, 400px);
+  width: min(100%, max(0px, (100cqh - 28px) * var(--logo-aspect)));
   gap: 12px;
+  min-width: 0;
+  min-height: 0;
+  max-width: 300px;
 }
 </style>
