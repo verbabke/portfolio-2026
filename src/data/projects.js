@@ -118,6 +118,38 @@ export const projects = [
     repoUrl: "https://github.com/verbabke/pod-data",
   },
   {
+    id: "3d-os",
+    title: "3D OS",
+    descriptionShort:
+      "3D environment with a monitor and replicated operating system.",
+    content: [
+      {
+        side: "left",
+        images: [
+          { src: "/img/projects/monitor_1.png", alt: "3D environment monitor" },
+        ],
+        columns: 1,
+        text: "This is a 3D environment that simulates a desktop experience with a monitor and a replicated operating system. At the time, I used it to showcase my work for the semester of my studies inside of the internet explorer window. \n\nThe project was built using React, React Three Fiber, and Drei. The 3D model was created in Blender.",
+      },
+      {
+        images: [
+          {
+            src: "/img/projects/monitor_2.png",
+            alt: "3D environment monitor",
+          },
+          { src: "/img/projects/monitor_3.png", alt: "3D environment monitor" },
+        ],
+      },
+    ],
+    type: "School Project",
+    skills: [
+      { icon: "/img/skill-icons/react.svg", alt: "React" },
+      { icon: "/img/skill-icons/threejs.svg", alt: "Three.js" },
+      { icon: "/img/skill-icons/blender.svg", alt: "Blender" },
+    ],
+    liveUrl: "https://3d-monitor-lyart.vercel.app/",
+  },
+  {
     id: "unbubble",
     title: "Unbubble",
     descriptionShort: "A public installation for engaging with daily prompts.",
@@ -189,36 +221,4 @@ export const projects = [
   //   ],
   //   liveUrl: "https://compass-pink-eta.vercel.app/",
   // },
-  {
-    id: "3d-os",
-    title: "3D OS",
-    descriptionShort:
-      "3D environment with a monitor and replicated operating system.",
-    content: [
-      {
-        side: "left",
-        images: [
-          { src: "/img/projects/monitor_1.png", alt: "3D environment monitor" },
-        ],
-        columns: 1,
-        text: "This is a 3D environment that simulates a desktop experience with a monitor and a replicated operating system. At the time, I used it to showcase my work for the semester of my studies inside of the internet explorer window. \n\nThe project was built using React, React Three Fiber, and Drei. The 3D model was created in Blender.",
-      },
-      {
-        images: [
-          {
-            src: "/img/projects/monitor_2.png",
-            alt: "3D environment monitor",
-          },
-          { src: "/img/projects/monitor_3.png", alt: "3D environment monitor" },
-        ],
-      },
-    ],
-    type: "School Project",
-    skills: [
-      { icon: "/img/skill-icons/react.svg", alt: "React" },
-      { icon: "/img/skill-icons/threejs.svg", alt: "Three.js" },
-      { icon: "/img/skill-icons/blender.svg", alt: "Blender" },
-    ],
-    liveUrl: "https://3d-monitor-lyart.vercel.app/",
-  },
 ];

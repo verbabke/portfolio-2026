@@ -431,6 +431,7 @@ defineExpose({
       :visible="isRevealingDetail && openedIconId === 'projects'"
       :compact="isCompact"
       :project-index="activeProjectIndex"
+      :preload-images="!visible && Boolean(routeProjectId)"
       @tile-layout="projectTileLayout = $event"
       @open="openProject"
       @home="closeDetail"

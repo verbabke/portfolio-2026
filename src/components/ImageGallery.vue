@@ -9,6 +9,10 @@ defineProps({
     type: Number,
     default: 2,
   },
+  loading: {
+    type: String,
+    default: "lazy",
+  },
 });
 
 defineEmits(["open"]);
@@ -26,7 +30,7 @@ defineEmits(["open"]);
         :aria-label="`Enlarge image: ${image.alt}`"
         @click="$emit('open', index)"
       >
-        <img :src="image.src" :alt="image.alt" loading="lazy" />
+        <img :src="image.src" :alt="image.alt" :loading="loading" />
       </button>
       <figcaption v-if="image.caption" class="content-copy">
         {{ image.caption }}

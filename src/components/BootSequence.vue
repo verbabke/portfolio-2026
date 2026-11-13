@@ -1,5 +1,5 @@
 <script setup>
-import { computed, onBeforeUnmount, ref, watch } from "vue";
+import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
 
 const props = defineProps({
   powered: {
@@ -64,6 +64,13 @@ watch(
     }
   },
 );
+
+onMounted(() => {
+  if (props.powered) {
+    isBooting.value = true;
+    updateBootProgress(window.performance.now());
+  }
+});
 
 function handleFadeOutComplete() {
   if (props.powered) {

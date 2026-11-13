@@ -18,6 +18,10 @@ const props = defineProps({
     type: Number,
     default: 0,
   },
+  preloadImages: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 defineEmits(["home", "list"]);
@@ -139,6 +143,7 @@ defineExpose({ getScrollElement: () => contentRef.value });
           v-if="panel.images?.length"
           :images="panel.images"
           :columns="panel.columns"
+          :loading="preloadImages ? 'eager' : 'lazy'"
           @open="openImage = panelOffsets[panelIndex] + $event"
         />
         <div v-if="panel.videos?.length" class="project-video-grid">

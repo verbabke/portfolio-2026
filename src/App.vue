@@ -7,6 +7,7 @@ import PortfolioScene from "./components/PortfolioScene.vue";
 import DeviceShell from "./components/device/DeviceShell.vue";
 import RouteContent from "./components/RouteContent.vue";
 import WebGLWarning from "./components/WebGLWarning.vue";
+import { useImagePreload } from "./composables/useImagePreload";
 import { getRouteMetadata, getRouteState } from "./router";
 import { seo } from "./data/seo";
 
@@ -22,6 +23,29 @@ const showWebGLWarning = ref(false);
 const isMounted = ref(false);
 let powerTrigger = null;
 const { hasFinishLoading, progress } = await useProgress();
+const {
+  imagesReady,
+  imageProgress,
+  hasImagesToPreload,
+  preloadImages,
+  cancelImagePreload,
+} = useImagePreload();
+const bootReady = computed(() => hasFinishLoading.value && imagesReady.value);
+const bootProgress = computed(() =>
+  hasImagesToPreload.value
+    ? Math.round((progress.value + imageProgress.value) / 2)
+    : progress.value,
+);
+
+function preloadRouteImages() {
+  const { project, page } = getRouteMetadata(route);
+  const content = project ?? page;
+  const panels = content?.content ??
+    content?.panels ?? [{ images: content?.img ?? [] }];
+  preloadImages(
+    panels.flatMap((panel) => (panel.images ?? []).map((image) => image.src)),
+  );
+}
 
 function webGLAvailable() {
   try {
@@ -103,7 +127,7 @@ function updateMetadata() {
   canonicalLink.href = metadata.canonical;
 }
 
-function activateDirectRoute() {
+function activateDirectRoute(skipBoot = false) {
   if (!routeState.value.iconId) return;
 
   if (!webGLAvailable()) {
@@ -112,9 +136,10 @@ function activateDirectRoute() {
     return;
   }
 
+  if (!skipBoot) preloadRouteImages();
   isPowered.value = true;
-  isSceneVisible.value = true;
-  hasBootCompleted.value = true;
+  isSceneVisible.value = skipBoot;
+  hasBootCompleted.value = skipBoot;
   isSceneMounted.value = true;
 }
 
@@ -124,6 +149,7 @@ function navigateTo(path) {
 
 function togglePower() {
   if (isPowered.value) {
+    cancelImagePreload();
     hasBootCompleted.value = false;
     isSceneVisible.value = false;
     isSceneMounted.value = false;
@@ -137,6 +163,7 @@ function togglePower() {
     return;
   }
 
+  preloadRouteImages();
   hasBootCompleted.value = false;
   isSceneVisible.value = false;
   isSceneMounted.value = true;
@@ -153,10 +180,20 @@ watch(
   },
 );
 
+watch(
+  () => route.fullPath,
+  () => {
+    if (isMounted.value && isSceneMounted.value && !hasBootCompleted.value) {
+      preloadRouteImages();
+    }
+  },
+);
+
 onMounted(() => {
   isMounted.value = true;
   updateMetadata();
-  activateDirectRoute();
+  const navigation = performance.getEntriesByType("navigation")[0];
+  activateDirectRoute(navigation?.type === "reload");
 });
 
 function handleBootComplete() {
@@ -203,8 +240,8 @@ function handleBack() {
     <BootSequence
       v-if="!hasBootCompleted"
       :powered="isPowered"
-      :has-finish-loading="hasFinishLoading"
-      :progress="progress"
+      :has-finish-loading="bootReady"
+      :progress="bootProgress"
       @reveal="handleBootReveal"
       @complete="handleBootComplete"
     />

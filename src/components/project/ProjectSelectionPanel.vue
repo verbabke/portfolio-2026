@@ -31,6 +31,10 @@ const props = defineProps({
     type: Number,
     default: -1,
   },
+  preloadImages: {
+    type: Boolean,
+    default: false,
+  },
 });
 const emit = defineEmits(["tile-layout", "open", "home", "list"]);
 
@@ -234,6 +238,7 @@ defineExpose({
           :key="projectIndex"
           :project="selectedProject"
           :index="projectIndex"
+          :preload-images="preloadImages"
           @home="emit('home')"
           @list="emit('list')"
         />
