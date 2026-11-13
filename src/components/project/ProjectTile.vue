@@ -76,6 +76,15 @@ const style = computed(() => {
   transition: transform 300ms cubic-bezier(0.2, 0.75, 0.25, 1);
 }
 
+.project-tile:focus:not(:focus-visible) {
+  outline: none;
+}
+
+.project-tile:focus-visible {
+  outline: 2px solid var(--screen-text);
+  outline-offset: 3px;
+}
+
 .project-tile-icon {
   grid-column: 1;
   grid-row: 1;

@@ -180,11 +180,7 @@ defineExpose({ getScrollElement: () => contentRef.value });
         <span class="content-action-icon" aria-hidden="true">↗</span>
       </a>
     </nav>
-    <ImageLightbox
-      v-if="openImage >= 0"
-      v-model:index="openImage"
-      :images="allImages"
-    />
+    <ImageLightbox v-model:index="openImage" :images="allImages" />
   </article>
 </template>
 

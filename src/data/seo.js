@@ -1,5 +1,5 @@
 export const seo = {
-  siteUrl: "https://bjornverbakel.nl",
+  siteUrl: "https://www.bjornverbakel.nl",
   siteName: "Bjorn Verbakel",
   defaultImage: "/img/logo/verbabke-logo-horizontal.png",
   twitterCard: "summary_large_image",

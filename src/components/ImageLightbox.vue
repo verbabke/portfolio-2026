@@ -1,5 +1,5 @@
 <script setup>
-import { computed, nextTick, onBeforeUnmount, ref, watch } from "vue";
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from "vue";
 import FadeTransition from "./FadeTransition.vue";
 
 const props = defineProps({
@@ -18,6 +18,7 @@ const emit = defineEmits(["update:index"]);
 
 const image = computed(() => props.images[props.index] ?? null);
 const closeButton = ref(null);
+const isMounted = ref(false);
 
 function close() {
   emit("update:index", -1);
@@ -45,11 +46,15 @@ watch(image, async (value) => {
   closeButton.value?.focus();
 });
 
+onMounted(() => {
+  isMounted.value = true;
+});
+
 onBeforeUnmount(() => window.removeEventListener("keydown", onKeydown));
 </script>
 
 <template>
-  <Teleport to="body">
+  <Teleport v-if="isMounted" to="body">
     <FadeTransition>
       <div
         v-if="image"

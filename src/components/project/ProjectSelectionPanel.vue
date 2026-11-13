@@ -345,6 +345,15 @@ defineExpose({
   display: none;
 }
 
+.project-carousel:focus:not(:focus-visible) {
+  outline: none;
+}
+
+.project-carousel:focus-visible {
+  outline: 2px solid var(--screen-text);
+  outline-offset: -2px;
+}
+
 .project-carousel::before {
   content: "";
   flex: 0 0 max(0px, calc(50% - var(--edge)));
