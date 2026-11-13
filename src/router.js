@@ -5,6 +5,7 @@ import {
 } from "vue-router";
 import { projects } from "./data/projects";
 import { portfolioPages } from "./data/portfolioPages";
+import { seo } from "./data/seo";
 
 const routeStateComponent = { render: () => null };
 
@@ -66,6 +67,15 @@ export function getPortfolioPath(iconId, projectId = null) {
 
 export function getRouteMetadata(route) {
   const state = getRouteState(route);
+  const defaults = {
+    image: seo.defaultImage,
+    ogType: "website",
+    twitterCard: seo.twitterCard,
+    canonical: new URL(
+      getPortfolioPath(state.iconId, state.projectId),
+      seo.siteUrl,
+    ).href,
+  };
 
   if (state.projectId) {
     const index = projects.findIndex(
@@ -77,10 +87,13 @@ export function getRouteMetadata(route) {
     )[0]?.src;
 
     return {
-      title: `${project.title} | Bjorn Verbakel`,
+      ...defaults,
+      title: `${project.title} | ${seo.siteName}`,
       description: project.descriptionShort,
-      image: firstImage ?? "/img/logo/verbabke-logo-horizontal.png",
+      image: firstImage ?? seo.defaultImage,
+      ogType: "article",
       type: "CreativeWork",
+      ...seo.projectOverrides[project.id],
       project,
       index,
     };
@@ -88,10 +101,8 @@ export function getRouteMetadata(route) {
 
   if (route.name === "projects") {
     return {
-      title: "Projects | Bjorn Verbakel",
-      description:
-        "Selected interactive web, design, and physical technology projects by Bjorn Verbakel.",
-      image: "/img/logo/verbabke-logo-horizontal.png",
+      ...defaults,
+      ...seo.pages.projects,
       type: "CollectionPage",
     };
   }
@@ -104,19 +115,18 @@ export function getRouteMetadata(route) {
       .find(Boolean);
 
     return {
-      title: `${page.title} | Bjorn Verbakel`,
-      description: firstParagraph ?? "Portfolio of Bjorn Verbakel.",
-      image: "/img/logo/verbabke-logo-horizontal.png",
+      ...defaults,
+      title: `${page.title} | ${seo.siteName}`,
+      description: firstParagraph ?? seo.pages.home.description,
       type: "WebPage",
+      ...seo.pages[route.name],
       page,
     };
   }
 
   return {
-    title: "Bjorn Verbakel | Portfolio",
-    description:
-      "Portfolio of Bjorn Verbakel, an ICT student and designer building interactive 3D web experiences and physical technology projects.",
-    image: "/img/logo/verbabke-logo-horizontal.png",
+    ...defaults,
+    ...seo.pages.home,
     type: "WebSite",
   };
 }

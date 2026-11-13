@@ -8,6 +8,7 @@ import DeviceShell from "./components/device/DeviceShell.vue";
 import RouteContent from "./components/RouteContent.vue";
 import WebGLWarning from "./components/WebGLWarning.vue";
 import { getRouteMetadata, getRouteState } from "./router";
+import { seo } from "./data/seo";
 
 const route = useRoute();
 const router = useRouter();
@@ -42,34 +43,56 @@ function updateMetadata() {
   if (typeof document === "undefined") return;
 
   const metadata = getRouteMetadata(route);
-  const canonical = new URL(route.fullPath, window.location.origin).href;
   document.title = metadata.title;
 
-  const setMeta = (selector, attribute, value) => {
+  const setMeta = (selector, attribute, name, content) => {
     let element = document.head.querySelector(selector);
     if (!element) {
       element = document.createElement("meta");
       document.head.append(element);
     }
-    element.setAttribute(attribute, value);
+    element.setAttribute(attribute, name);
+    element.content = content;
   };
 
-  setMeta('meta[name="description"]', "name", "description");
-  document.head.querySelector('meta[name="description"]').content =
-    metadata.description;
-  setMeta('meta[property="og:title"]', "property", "og:title");
-  document.head.querySelector('meta[property="og:title"]').content =
-    metadata.title;
-  setMeta('meta[property="og:description"]', "property", "og:description");
-  document.head.querySelector('meta[property="og:description"]').content =
-    metadata.description;
-  setMeta('meta[property="og:url"]', "property", "og:url");
-  document.head.querySelector('meta[property="og:url"]').content = canonical;
-  setMeta('meta[property="og:image"]', "property", "og:image");
-  document.head.querySelector('meta[property="og:image"]').content = new URL(
-    metadata.image,
-    window.location.origin,
-  ).href;
+  setMeta(
+    'meta[name="description"]',
+    "name",
+    "description",
+    metadata.description,
+  );
+  setMeta('meta[property="og:type"]', "property", "og:type", metadata.ogType);
+  setMeta(
+    'meta[property="og:title"]',
+    "property",
+    "og:title",
+    metadata.ogTitle ?? metadata.title,
+  );
+  setMeta(
+    'meta[property="og:description"]',
+    "property",
+    "og:description",
+    metadata.ogDescription ?? metadata.description,
+  );
+  setMeta('meta[property="og:url"]', "property", "og:url", metadata.canonical);
+  setMeta(
+    'meta[property="og:image"]',
+    "property",
+    "og:image",
+    new URL(metadata.image, seo.siteUrl).href,
+  );
+  setMeta(
+    'meta[property="og:site_name"]',
+    "property",
+    "og:site_name",
+    seo.siteName,
+  );
+  setMeta(
+    'meta[name="twitter:card"]',
+    "name",
+    "twitter:card",
+    metadata.twitterCard,
+  );
 
   let canonicalLink = document.head.querySelector('link[rel="canonical"]');
   if (!canonicalLink) {
@@ -77,7 +100,7 @@ function updateMetadata() {
     canonicalLink.rel = "canonical";
     document.head.append(canonicalLink);
   }
-  canonicalLink.href = canonical;
+  canonicalLink.href = metadata.canonical;
 }
 
 function activateDirectRoute() {

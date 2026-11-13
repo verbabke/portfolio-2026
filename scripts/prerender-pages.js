@@ -3,8 +3,9 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { renderToString } from "vue/server-renderer";
 import { createServer } from "vite";
+import { seo } from "../src/data/seo.js";
 
-const siteUrl = "https://bjornverbakel.nl";
+const siteUrl = seo.siteUrl;
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const outputDirectory = path.join(root, "dist");
 const template = await readFile(
@@ -33,7 +34,7 @@ function escapeHtml(value = "") {
 }
 
 function metadataTags(route, metadata) {
-  const canonical = new URL(route.fullPath, siteUrl).href;
+  const canonical = metadata.canonical;
   const image = new URL(metadata.image, siteUrl).href;
   const project = metadata.project;
   let structuredData;
@@ -46,7 +47,7 @@ function metadataTags(route, metadata) {
       description: metadata.description,
       url: canonical,
       image,
-      author: { "@type": "Person", name: "Bjorn Verbakel", url: siteUrl },
+      author: { "@type": "Person", name: seo.siteName, url: siteUrl },
     };
   } else if (route.name === "projects") {
     structuredData = {
@@ -60,7 +61,7 @@ function metadataTags(route, metadata) {
     structuredData = {
       "@context": "https://schema.org",
       "@type": "Person",
-      name: "Bjorn Verbakel",
+      name: seo.siteName,
       url: siteUrl,
       description: metadata.description,
     };
@@ -72,12 +73,13 @@ function metadataTags(route, metadata) {
     `<meta name="robots" content="index,follow">`,
     `<meta name="description" content="${escapeHtml(metadata.description)}">`,
     `<link rel="canonical" href="${escapeHtml(canonical)}">`,
-    `<meta property="og:type" content="${project ? "article" : "website"}">`,
-    `<meta property="og:title" content="${escapeHtml(metadata.title)}">`,
-    `<meta property="og:description" content="${escapeHtml(metadata.description)}">`,
+    `<meta property="og:type" content="${escapeHtml(metadata.ogType)}">`,
+    `<meta property="og:title" content="${escapeHtml(metadata.ogTitle ?? metadata.title)}">`,
+    `<meta property="og:description" content="${escapeHtml(metadata.ogDescription ?? metadata.description)}">`,
     `<meta property="og:url" content="${escapeHtml(canonical)}">`,
     `<meta property="og:image" content="${escapeHtml(image)}">`,
-    `<meta name="twitter:card" content="summary_large_image">`,
+    `<meta property="og:site_name" content="${escapeHtml(seo.siteName)}">`,
+    `<meta name="twitter:card" content="${escapeHtml(metadata.twitterCard)}">`,
     `<script type="application/ld+json">${jsonLd}</script>`,
   ].join("\n    ");
 }
