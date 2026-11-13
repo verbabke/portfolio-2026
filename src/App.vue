@@ -154,6 +154,7 @@ function togglePower() {
     isSceneVisible.value = false;
     isSceneMounted.value = false;
     isPowered.value = false;
+    navigateTo("/");
     return;
   }
 
