@@ -21,6 +21,12 @@ export const portfolioPages = {
         ],
       },
     ],
+    links: [
+      {
+        label: "Contact me",
+        to: "/contact/",
+      },
+    ],
   },
   contact: {
     title: "Contact",

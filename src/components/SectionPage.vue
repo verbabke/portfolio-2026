@@ -1,9 +1,10 @@
 <script setup>
-import { ref } from "vue";
+import { ref, watch } from "vue";
+import { RouterLink } from "vue-router";
 import Breadcrumb from "./Breadcrumb.vue";
 import ContentText from "./ContentText.vue";
 
-defineProps({
+const props = defineProps({
   page: {
     type: Object,
     required: true,
@@ -17,6 +18,13 @@ defineProps({
 defineEmits(["home"]);
 
 const contentRef = ref(null);
+watch(
+  () => props.page,
+  () => {
+    if (contentRef.value) contentRef.value.scrollTop = 0;
+  },
+  { flush: "post" },
+);
 defineExpose({ getScrollElement: () => contentRef.value });
 </script>
 
@@ -67,19 +75,28 @@ defineExpose({ getScrollElement: () => contentRef.value });
       <nav
         v-if="page.links?.length"
         class="content-actions"
-        aria-label="Contact links"
+        aria-label="Page links"
       >
-        <a
-          v-for="link in page.links"
-          :key="link.label"
-          class="content-action ui-panel"
-          :href="link.href"
-          :target="link.external ? '_blank' : undefined"
-          :rel="link.external ? 'noreferrer' : undefined"
-        >
-          {{ link.label }}
-          <span class="content-action-icon" aria-hidden="true">↗</span>
-        </a>
+        <template v-for="link in page.links" :key="link.label">
+          <RouterLink
+            v-if="link.to"
+            class="content-action ui-panel"
+            :to="link.to"
+          >
+            {{ link.label }}
+            <span class="content-action-icon" aria-hidden="true">→</span>
+          </RouterLink>
+          <a
+            v-else
+            class="content-action ui-panel"
+            :href="link.href"
+            :target="link.external ? '_blank' : undefined"
+            :rel="link.external ? 'noreferrer' : undefined"
+          >
+            {{ link.label }}
+            <span class="content-action-icon" aria-hidden="true">↗</span>
+          </a>
+        </template>
       </nav>
     </div>
   </article>
