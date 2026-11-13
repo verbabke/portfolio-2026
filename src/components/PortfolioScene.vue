@@ -31,6 +31,9 @@ import { useSceneNavigation } from "../composables/useSceneNavigation";
 import { useIconLayout } from "../composables/useIconLayout";
 import { useProjectTiles } from "../composables/useProjectTiles";
 import { useProjectTabs } from "../composables/useProjectTabs";
+import { useHoldScroll } from "../composables/useHoldScroll";
+import { projects } from "../data/projects";
+import { getPortfolioPath } from "../router";
 
 extend({
   AmbientLight,
@@ -51,7 +54,17 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  routeIconId: {
+    type: String,
+    default: null,
+  },
+  routeProjectId: {
+    type: String,
+    default: null,
+  },
 });
+
+const emit = defineEmits(["navigate"]);
 
 const pixelSize = 4;
 const iconRefs = new Map();
@@ -110,7 +123,7 @@ const {
   handleDragMove,
   handleDragEnd,
   handleDragCancel,
-} = useSceneNavigation(iconDefinitions, isCompact);
+} = useSceneNavigation(iconDefinitions, isCompact, props.routeIconId);
 
 const { icons, focusOverride, getLabelStyle } = useIconLayout({
   iconDefinitions,
@@ -131,6 +144,33 @@ const { projectTileLayout, projectTileModels } = useProjectTiles({
 
 const { tabs, activeProjectIndex, openProject, closeProject, showList } =
   useProjectTabs();
+
+watch(
+  () => props.routeIconId,
+  (iconId) => {
+    if (iconId) openedIconId.value = iconId;
+    else closeDetail();
+  },
+);
+
+watch(
+  () => props.routeProjectId,
+  (projectId) => {
+    const index = projects.findIndex((project) => project.id === projectId);
+    if (index >= 0) openProject(index);
+    else showList();
+  },
+  { immediate: true },
+);
+
+watch(
+  () =>
+    getPortfolioPath(
+      openedIconId.value,
+      projects[activeProjectIndex.value]?.id ?? null,
+    ),
+  (path) => emit("navigate", path),
+);
 
 // Leaving Projects returns it to the list
 // The tabs stay open
@@ -206,6 +246,17 @@ const isRevealingDetail = computed(
 );
 
 const projectPanel = ref(null);
+const sectionPage = ref(null);
+const { startScrolling, stopScrolling } = useHoldScroll(() =>
+  openedIconId.value === "projects"
+    ? projectPanel.value?.getScrollElement()
+    : sectionPage.value?.getScrollElement(),
+);
+
+watch([openedIconId, activeProjectIndex, () => props.visible], () => {
+  stopScrolling();
+});
+
 function activateFocusedIcon() {
   if (openedIconId.value === "projects") {
     projectPanel.value?.openFocusedProject();
@@ -245,6 +296,8 @@ defineExpose({
   selectPrevious,
   selectNext,
   handleDirection,
+  startScrolling,
+  stopScrolling,
 });
 </script>
 
@@ -366,6 +419,7 @@ defineExpose({
     <FadeTransition>
       <SectionPage
         v-if="isRevealingDetail && openedIconId && openedIconId !== 'projects'"
+        ref="sectionPage"
         :page="portfolioPages[openedIconId]"
         :compact="isCompact"
         @home="closeDetail"

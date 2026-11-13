@@ -58,8 +58,8 @@ const panelOffsets = computed(() => {
 const openImage = ref(-1);
 
 const iconReady = ref(false);
-const iconViewport = window.matchMedia("(min-width: 500px)");
-const showDetailIcon = ref(iconViewport.matches);
+const showDetailIcon = ref(false);
+let iconViewport;
 const updateIconViewport = (event) => {
   showDetailIcon.value = event.matches;
 };
@@ -67,6 +67,8 @@ const iconDelayMs = 260;
 let iconTimer = 0;
 
 onMounted(() => {
+  iconViewport = window.matchMedia("(min-width: 500px)");
+  showDetailIcon.value = iconViewport.matches;
   iconViewport.addEventListener("change", updateIconViewport);
   iconTimer = setTimeout(() => {
     iconReady.value = true;
@@ -75,21 +77,10 @@ onMounted(() => {
 
 onBeforeUnmount(() => {
   clearTimeout(iconTimer);
-  iconViewport.removeEventListener("change", updateIconViewport);
+  iconViewport?.removeEventListener("change", updateIconViewport);
 });
 
-// Scrolls by roughly a page
-// Used by the D-pad
-function scrollBy(step) {
-  const el = contentRef.value;
-
-  el?.scrollBy({
-    top: step * Math.max(120, el.clientHeight * 0.7),
-    behavior: "smooth",
-  });
-}
-
-defineExpose({ scrollBy });
+defineExpose({ getScrollElement: () => contentRef.value });
 </script>
 
 <template>
@@ -100,6 +91,7 @@ defineExpose({ scrollBy });
   >
     <Breadcrumb
       :trail="['home', 'projects', project.title]"
+      :paths="['/', '/projects/']"
       @select="$emit($event === 0 ? 'home' : 'list')"
     />
 
@@ -188,7 +180,11 @@ defineExpose({ scrollBy });
         <span class="content-action-icon" aria-hidden="true">↗</span>
       </a>
     </nav>
-    <ImageLightbox v-model:index="openImage" :images="allImages" />
+    <ImageLightbox
+      v-if="openImage >= 0"
+      v-model:index="openImage"
+      :images="allImages"
+    />
   </article>
 </template>
 

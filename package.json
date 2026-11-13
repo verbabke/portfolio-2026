@@ -5,22 +5,23 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build && node scripts/prerender-pages.js",
     "preview": "vite preview"
   },
   "dependencies": {
-    "@lucide/vue": "^1.41.0",
-    "@tresjs/cientos": "^5.8.1",
-    "@tresjs/core": "^5.8.3",
-    "@tresjs/post-processing": "^3.7.4",
+    "@lucide/vue": "^1.72.0",
+    "@tresjs/cientos": "^5.10.1",
+    "@tresjs/core": "^5.10.1",
+    "@tresjs/post-processing": "^3.11.1",
     "nes.css": "^2.2.1",
-    "three": "^0.185.1",
-    "vue": "^3.5.40"
+    "three": "^0.187.0",
+    "vue": "^3.5.45",
+    "vue-router": "^5.5.0"
   },
   "devDependencies": {
-    "@tailwindcss/vite": "^4.3.3",
-    "@vitejs/plugin-vue": "^6.0.8",
-    "tailwindcss": "^4.3.3",
-    "vite": "^8.2.0"
+    "@tailwindcss/vite": "^4.3.5",
+    "@vitejs/plugin-vue": "^6.0.11",
+    "tailwindcss": "^4.3.5",
+    "vite": "^8.3.8"
   }
 }

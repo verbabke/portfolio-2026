@@ -1,4 +1,5 @@
 <script setup>
+import { ref } from "vue";
 import Breadcrumb from "./Breadcrumb.vue";
 import ContentText from "./ContentText.vue";
 
@@ -14,6 +15,9 @@ defineProps({
 });
 
 defineEmits(["home"]);
+
+const contentRef = ref(null);
+defineExpose({ getScrollElement: () => contentRef.value });
 </script>
 
 <template>
@@ -29,6 +33,7 @@ defineEmits(["home"]);
     />
 
     <div
+      ref="contentRef"
       class="section-page-content content-scroll absolute inset-y-0 right-0 w-[min(66%,800px)]"
       :class="{ 'section-page-compact': compact }"
     >

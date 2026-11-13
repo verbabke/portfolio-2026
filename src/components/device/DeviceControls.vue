@@ -1,5 +1,53 @@
 <script setup>
-defineEmits(["direction", "confirm", "back"]);
+import { onBeforeUnmount, onMounted } from "vue";
+
+const emit = defineEmits([
+  "direction",
+  "direction-start",
+  "direction-end",
+  "confirm",
+  "back",
+]);
+let activeDirection = null;
+
+function startDirection(direction) {
+  if (activeDirection === direction) return;
+  if (activeDirection) emit("direction-end", activeDirection);
+  activeDirection = direction;
+  emit("direction-start", direction);
+}
+
+function endDirection(direction = activeDirection) {
+  if (!activeDirection || direction !== activeDirection) return;
+  emit("direction-end", activeDirection);
+  activeDirection = null;
+}
+
+function handlePointerDown(direction, event) {
+  if (event.button !== 0) return;
+  event.currentTarget.setPointerCapture(event.pointerId);
+  startDirection(direction);
+}
+
+function handleKeyDown(direction, event) {
+  if ((event.key === " " || event.key === "Enter") && !event.repeat) {
+    startDirection(direction);
+  }
+}
+
+function handleKeyUp(direction, event) {
+  if (event.key === " " || event.key === "Enter") endDirection(direction);
+}
+
+function handleWindowBlur() {
+  endDirection();
+}
+
+onMounted(() => window.addEventListener("blur", handleWindowBlur));
+onBeforeUnmount(() => {
+  window.removeEventListener("blur", handleWindowBlur);
+  endDirection();
+});
 </script>
 
 <template>
@@ -13,6 +61,13 @@ defineEmits(["direction", "confirm", "back"]);
           :class="`d-pad-${direction}`"
           type="button"
           :aria-label="direction"
+          @pointerdown="handlePointerDown(direction, $event)"
+          @pointerup="endDirection(direction)"
+          @pointercancel="endDirection(direction)"
+          @lostpointercapture="endDirection(direction)"
+          @keydown="handleKeyDown(direction, $event)"
+          @keyup="handleKeyUp(direction, $event)"
+          @blur="endDirection(direction)"
           @click="$emit('direction', direction)"
         ></button>
         <button

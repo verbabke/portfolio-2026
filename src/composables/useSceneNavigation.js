@@ -2,7 +2,11 @@ import { computed, ref } from "vue";
 import { useIndexedFocus } from "./useIndexedFocus";
 
 // Owns icon-carousel focus, detail state, and compact-mode drag navigation.
-export function useSceneNavigation(iconDefinitions, isCompact) {
+export function useSceneNavigation(
+  iconDefinitions,
+  isCompact,
+  initialOpenedIconId = null,
+) {
   const focus = useIndexedFocus(iconDefinitions.length);
   const {
     focusedIndex: activeIndex,
@@ -12,7 +16,7 @@ export function useSceneNavigation(iconDefinitions, isCompact) {
   const hoveredIcon = computed(
     () => iconDefinitions[hoveredIndex.value]?.id ?? null,
   );
-  const openedIconId = ref(null);
+  const openedIconId = ref(initialOpenedIconId);
 
   const isDetailOpen = computed(() => Boolean(openedIconId.value));
 

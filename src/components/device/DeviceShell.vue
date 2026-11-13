@@ -17,7 +17,14 @@ defineProps({
   },
 });
 
-defineEmits(["toggle-power", "direction", "confirm", "back"]);
+defineEmits([
+  "toggle-power",
+  "direction",
+  "direction-start",
+  "direction-end",
+  "confirm",
+  "back",
+]);
 </script>
 
 <template>
@@ -36,6 +43,8 @@ defineEmits(["toggle-power", "direction", "confirm", "back"]);
         <DeviceSpeaker />
         <DeviceControls
           @direction="$emit('direction', $event)"
+          @direction-start="$emit('direction-start', $event)"
+          @direction-end="$emit('direction-end', $event)"
           @confirm="$emit('confirm')"
           @back="$emit('back')"
         />

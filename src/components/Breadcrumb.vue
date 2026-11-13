@@ -6,9 +6,22 @@ defineProps({
     type: Array,
     required: true,
   },
+  paths: {
+    type: Array,
+    default: () => ["/"],
+  },
 });
 
-defineEmits(["select"]);
+const emit = defineEmits(["select"]);
+
+function selectCrumb(event, index) {
+  if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) {
+    return;
+  }
+
+  event.preventDefault();
+  emit("select", index);
+}
 </script>
 
 <template>
@@ -24,9 +37,9 @@ defineEmits(["select"]);
         aria-current="page"
         >{{ label }}</span
       >
-      <button v-else type="button" @click="$emit('select', index)">
+      <a v-else :href="paths[index]" @click="selectCrumb($event, index)">
         {{ label }}
-      </button>
+      </a>
     </template>
   </nav>
 </template>
@@ -44,7 +57,7 @@ defineEmits(["select"]);
   }
 }
 
-.breadcrumb button {
+.breadcrumb a {
   padding: 0;
   border: 0;
   background: transparent;
@@ -55,7 +68,7 @@ defineEmits(["select"]);
   outline: none;
 }
 
-.breadcrumb button:hover {
+.breadcrumb a:hover {
   text-decoration: underline;
 }
 

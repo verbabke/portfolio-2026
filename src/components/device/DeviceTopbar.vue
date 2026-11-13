@@ -118,9 +118,7 @@ defineEmits(["toggle-power"]);
   padding: 5px 8px;
   background: var(--ui-bg);
   color: var(--ui-text);
-  font:
-    11px "Share Tech Mono",
-    monospace;
+  font-size: 11px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   white-space: nowrap;

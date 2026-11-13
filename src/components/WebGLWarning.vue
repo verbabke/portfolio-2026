@@ -38,36 +38,34 @@ onBeforeUnmount(() => window.removeEventListener("keydown", onKeydown));
 </script>
 
 <template>
-  <Teleport to="body">
-    <FadeTransition>
-      <div v-if="visible" class="modal-overlay warning-overlay fade-layer">
-        <section
-          class="warning-dialog content-panel ui-panel"
-          role="alertdialog"
-          aria-modal="true"
-          aria-labelledby="webgl-warning-title"
-          aria-describedby="webgl-warning-description"
+  <FadeTransition>
+    <div v-if="visible" class="modal-overlay warning-overlay fade-layer">
+      <section
+        class="warning-dialog content-panel ui-panel"
+        role="alertdialog"
+        aria-modal="true"
+        aria-labelledby="webgl-warning-title"
+        aria-describedby="webgl-warning-description"
+      >
+        <h2 id="webgl-warning-title" class="content-panel-title">
+          WebGL unavailable
+        </h2>
+        <p id="webgl-warning-description" class="content-copy">
+          Unfortunately, your browser does not support WebGL. Please enable
+          WebGL, then reload the page. This website requires WebGL to display
+          its 3D content.
+        </p>
+        <button
+          ref="closeButton"
+          type="button"
+          class="content-action ui-panel"
+          @click="emit('close')"
         >
-          <h2 id="webgl-warning-title" class="content-panel-title">
-            WebGL unavailable
-          </h2>
-          <p id="webgl-warning-description" class="content-copy">
-            Unfortunately, your browser does not support WebGL. Please enable
-            WebGL, then reload the page. This website requires WebGL to display
-            its 3D content.
-          </p>
-          <button
-            ref="closeButton"
-            type="button"
-            class="content-action ui-panel"
-            @click="emit('close')"
-          >
-            Close
-          </button>
-        </section>
-      </div>
-    </FadeTransition>
-  </Teleport>
+          Close
+        </button>
+      </section>
+    </div>
+  </FadeTransition>
 </template>
 
 <style scoped>

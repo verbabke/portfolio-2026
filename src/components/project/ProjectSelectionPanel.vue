@@ -133,11 +133,7 @@ function handleCarouselScroll() {
 }
 
 function handleDirection(direction) {
-  if (selectedProject.value) {
-    if (direction === "top") detailRef.value?.scrollBy(-1);
-    if (direction === "bottom") detailRef.value?.scrollBy(1);
-    return;
-  }
+  if (selectedProject.value) return;
 
   if (direction === "top") moveFocus(-1);
   if (direction === "bottom") moveFocus(1);
@@ -218,6 +214,7 @@ onBeforeUnmount(() => {
 defineExpose({
   focusPrevious: () => moveFocus(-1),
   focusNext: () => moveFocus(1),
+  getScrollElement: () => detailRef.value?.getScrollElement() ?? null,
   handleDirection,
   openFocusedProject,
 });
